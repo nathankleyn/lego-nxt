@@ -28,7 +28,7 @@ describe NXT::Interface::SerialPort do
   end
 
   describe "#initialize" do
-    it "should set the device to the incomming interface" do
+    it "should set the device to the incomming argument" do
       subject.dev.should equal(@device)
     end
 

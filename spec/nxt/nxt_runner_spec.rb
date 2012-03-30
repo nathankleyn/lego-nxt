@@ -62,4 +62,75 @@ describe NXTRunner do
       should_not respond_to(:port_identifiers=)
     end
   end
+
+  describe "#initialize" do
+    it "should raise an exception if an invalid type of interface is given" do
+      interface_stub = stub()
+      interface_stub.should_receive(:is_a?).with(NXT::Interface::Base).once.and_return(false)
+      expect do
+        NXTRunner.new(interface_stub)
+      end.to raise_exception(InvalidInterfaceError)
+    end
+
+    it "should set the interface to the incomming argument" do
+      subject.interface.should equal(@interface)
+    end
+
+    it "should set the options to the incomming argument" do
+      options_stub = stub()
+      nxt = NXTRunner.new(@interface, options_stub)
+      nxt.options.should equal(options_stub)
+    end
+
+    it "should call yield if given a block, passing self" do
+      block_called = false
+
+      NXTRunner.new(@interface) do |nxt|
+        block_called = true
+        nxt.should be_an_instance_of(NXTRunner)
+      end
+
+      block_called.should be_true
+    end
+  end
+
+  describe "#add" do
+    it "should raise an exception if an invalid type of port is given" do
+      expect do
+        subject.add("not a symbol", :symbol, Class)
+      end.to raise_exception(TypeError, "Expected port to be a Symbol")
+    end
+
+    it "should raise an exception if an invalid type of identifier is given" do
+      expect do
+        subject.add(:symbol, "not a symbol", Class)
+      end.to raise_exception(TypeError, "Expected identifier to be a Symbol")
+    end
+
+    it "should raise an exception if an invalid type of klass is given" do
+      expect do
+        subject.add(:symbol, :symbol, "not a class")
+      end.to raise_exception(TypeError, "Expected klass to be a Class")
+    end
+
+    it "should raise an exception if an invalid port number or letter is given" do
+      expect do
+        subject.add(:invalid_port, :symbol, Class)
+      end.to raise_exception(TypeError, "Expected port to be one of: :a, :b, :c, :one, :two, :three, :four")
+    end
+
+    it "should create a new instance of the passed klass and store it in the attribute for the given port" do
+      port = :a
+      class_stub = Class.new
+      class_return_stub = stub()
+
+      class_stub.should_receive(:new) do
+        class_return_stub
+      end.with(port).once()
+
+      subject.add(port, :hello, class_stub)
+
+      subject.send(port).should equal(class_return_stub)
+    end
+  end
 end

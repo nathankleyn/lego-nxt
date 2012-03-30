@@ -1,4 +1,6 @@
 class NXTRunner
+  VALID_PORTS = [:a, :b, :c, :one, :two, :three, :four]
+
   attr_accessor :interface, :options
 
   # Accessors for ports on the NXT brick. These will be populate with the
@@ -31,14 +33,26 @@ class NXTRunner
   #
   # @param Symbol port The port to bind to.
   # @param Symbol identifier The identifier to associate with this port.
-  # @param Class instance The Class to instantiate as the instance of this
-  #                       port. There is no limitation on what type this can
-  #                       be, though it must be able to hook in correctly
-  #                       with the NXT library.
-  def add(port, identifier, instance)
+  # @param Class klass The Class to instantiate as the instance of this
+  #                    port. There is no limitation on what type this can
+  #                    be, though it must be able to hook in correctly
+  #                    with the NXT library.
+  def add(port, identifier, klass)
+    raise TypeError.new("Expected port to be a Symbol") unless port.is_a?(Symbol)
+    raise TypeError.new("Expected identifier to be a Symbol") unless identifier.is_a?(Symbol)
+    raise TypeError.new("Expected klass to be a Class") unless klass.is_a?(Class)
+
+    unless VALID_PORTS.include?(port)
+      raise TypeError.new("Expected port to be one of: :#{VALID_PORTS.join(", :")}")
+    end
+
     # Makes a new instance of the class and pushes it into our accessor for
     # the given port.
-    self.send("#{port}=", instance.new(port))
+    if self.send(port).nil?
+      self.send("#{port}=", klass.new(port))
+    else
+      raise "Port #{port} is already set, call remove first!"
+    end
 
     # Given that that succeeded, all that remains is to add the identifier
     # to our lookup Hash. We'll use this Hash later on within method_missing.
