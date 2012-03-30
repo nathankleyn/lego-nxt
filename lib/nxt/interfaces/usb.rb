@@ -2,7 +2,7 @@ require "usb"
 
 module NXT
   module Interface
-    class USB
+    class USB < Base
     end
   end
 end

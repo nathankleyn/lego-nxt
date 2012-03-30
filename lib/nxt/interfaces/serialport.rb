@@ -2,7 +2,7 @@ require "serialport"
 
 module NXT
   module Interface
-    class SerialPort
+    class SerialPort < Base
       extend NXT::Exceptions
 
       attr_reader :dev

@@ -62,4 +62,12 @@ describe NXT::Interface::SerialPort do
       subject.connect
     end
   end
+
+  describe "#send" do
+
+  end
+
+  describe "#receive" do
+
+  end
 end
