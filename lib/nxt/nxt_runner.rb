@@ -5,8 +5,8 @@ class NXTRunner
 
   # Accessors for ports on the NXT brick. These will be populate with the
   # appropriate instances of their respective connected sensors.
-  attr_accessor :a, :b, :c
-  attr_accessor :one, :two, :three, :four
+  attr_reader :a, :b, :c
+  attr_reader :one, :two, :three, :four
 
   # We mandate that all added port connections have an identifier associated
   # with it. This is so that code is not fragile when port swapping needs to
@@ -17,6 +17,8 @@ class NXTRunner
     unless interface.is_a?(NXT::Interface::Base)
       raise InvalidInterfaceError.new("Provided interface is not a valid type.")
     end
+
+    @port_identifiers = {}
 
     self.interface = interface
     self.options = options
@@ -46,17 +48,17 @@ class NXTRunner
       raise TypeError.new("Expected port to be one of: :#{VALID_PORTS.join(", :")}")
     end
 
-    # Makes a new instance of the class and pushes it into our accessor for
-    # the given port.
-    if self.send(port).nil?
-      self.send("#{port}=", klass.new(port))
+    # Makes a new instance of the class and pushes it into our instance variable
+    # for the given port.
+    port_variable = :"@#{port}"
+    if self.instance_variable_get(port_variable).nil?
+      self.instance_variable_set(port_variable, klass.new(port))
     else
-      raise "Port #{port} is already set, call remove first!"
+      raise PortTakenError.new("Port #{port} is already set, call remove first")
     end
 
     # Given that that succeeded, all that remains is to add the identifier
     # to our lookup Hash. We'll use this Hash later on within method_missing.
-    @port_identifiers ||= {}
     @port_identifiers[identifier] = port
   end
 
@@ -65,6 +67,7 @@ class NXTRunner
   #
   # @param Symbol identifier The identifier to search for and remove.
   def remove(identifier)
+    raise TypeError.new("Expected identifier to be a Symbol") unless identifier.is_a?(Symbol)
     !!@port_identifiers.delete(identifier)
   end
 
@@ -79,9 +82,9 @@ class NXTRunner
   # {#add} method.
   NXT::Connector.constants.each do |type_const|
     NXT::Connector.const_get(type_const).constants.each do |const|
-      # We don't use a splat here for the args, because otherwise when
-      # people don't pass in the correct number of params, it says
-      # at minimum "1 of 3" args passed...
+      # We don't use a splat here for the args, because that way when
+      # people don't pass in the correct number of params, it says helpfully
+      # "1 of 2" args passed (or something similar).
       define_method("add_#{const.to_s.underscore}_#{type_const.to_s.underscore}") do |port, identifier|
         self.add(port, identifier, NXT::Connector.const_get(type_const).const_get(const))
       end

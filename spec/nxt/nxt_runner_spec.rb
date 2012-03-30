@@ -22,39 +22,39 @@ describe NXTRunner do
       should respond_to(:options=)
     end
 
-    it "should have read/write accessors for @a" do
+    it "should have a read accessor for @a" do
       should respond_to(:a)
-      should respond_to(:a=)
+      should_not respond_to(:a=)
     end
 
-    it "should have read/write accessors for @b" do
+    it "should have a read accessor for @b" do
       should respond_to(:b)
-      should respond_to(:b=)
+      should_not respond_to(:b=)
     end
 
-    it "should have read/write accessors for @c" do
+    it "should have a read accessor for @c" do
       should respond_to(:c)
-      should respond_to(:c=)
+      should_not respond_to(:c=)
     end
 
-    it "should have read/write accessors for @one" do
+    it "should have a read accessor for @one" do
       should respond_to(:one)
-      should respond_to(:one=)
+      should_not respond_to(:one=)
     end
 
-    it "should have read/write accessors for @two" do
+    it "should have a read accessor for @two" do
       should respond_to(:two)
-      should respond_to(:two=)
+      should_not respond_to(:two=)
     end
 
-    it "should have read/write accessors for @three" do
+    it "should have a read accessor for @three" do
       should respond_to(:three)
-      should respond_to(:three=)
+      should_not respond_to(:three=)
     end
 
-    it "should have read/write accessors for @four" do
+    it "should have a read accessor for @four" do
       should respond_to(:four)
-      should respond_to(:four=)
+      should_not respond_to(:four=)
     end
 
     it "should have a read accessor for @port_identifiers" do
@@ -131,6 +131,61 @@ describe NXTRunner do
       subject.add(port, :hello, class_stub)
 
       subject.send(port).should equal(class_return_stub)
+    end
+
+    it "should raise an exception if the port given is already set" do
+      port = :a
+      class_stub = Class.new
+      class_stub.stub(:new)
+
+      subject.instance_variable_set(:"@#{port}", "some value already there")
+
+      expect do
+        subject.add(port, :hello, class_stub)
+      end.to raise_error(PortTakenError, "Port #{port} is already set, call remove first")
+    end
+
+    it "should set up the port identifiers correctly" do
+      port = :a
+      identifier = :hello_world
+      class_stub = Class.new
+      class_stub.stub(:new)
+
+      subject.add(port, identifier, class_stub)
+
+      subject.port_identifiers[identifier].should equal(port)
+    end
+  end
+
+  describe "#remove" do
+    it "should raise an exception if an invalid type of identifier is given" do
+      expect do
+        subject.remove("not a symbol")
+      end.to raise_exception(TypeError, "Expected identifier to be a Symbol")
+    end
+
+    it "should remove any matching identifiers" do
+      identifier = :hello_world
+      port_identifiers = {}
+      subject.instance_variable_set(:@port_identifiers, port_identifiers)
+
+      port_identifiers.should_receive(:delete).with(identifier).once()
+      subject.remove(identifier)
+    end
+
+    it "should return a boolean indicating whether it removed anything" do
+      identifier = :hello_world
+      port_identifiers = {}
+      port_identifiers[identifier] = true
+      subject.instance_variable_set(:@port_identifiers, port_identifiers)
+
+      return_value = subject.remove(identifier)
+      return_value.should be_true
+
+      port_identifiers.should_not include(identifier)
+
+      return_value = subject.remove(identifier)
+      return_value.should be_false
     end
   end
 end
