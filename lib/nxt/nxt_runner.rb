@@ -14,6 +14,7 @@ class NXTRunner
   attr_reader :port_identifiers
 
   def initialize(interface, options = {})
+    # FIXME: Duck typing here instead?
     unless interface.is_a?(NXT::Interface::Base)
       raise InvalidInterfaceError.new("Provided interface is not a valid type.")
     end
@@ -23,7 +24,22 @@ class NXTRunner
     self.interface = interface
     self.options = options
 
-    yield(self) if block_given?
+    if block_given?
+      begin
+        self.connect
+        yield(self)
+      ensure
+        self.disconnect
+      end
+    end
+  end
+
+  def connect
+    self.interface.connect
+  end
+
+  def disconnect
+    self.interface.disconnect
   end
 
   # Add a new connector instance, binding a specific identifier to the given

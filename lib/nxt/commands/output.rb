@@ -16,7 +16,7 @@ module NXT
     # brick. Instead, it outputs messages in byte arrays ready to be serialised
     # to the brick over the appropriate interface from within the {NXT::Brick}
     # class.
-    class Output
+    module Output
 
       # Can be :direct, or :system.
       @@command_type = :direct

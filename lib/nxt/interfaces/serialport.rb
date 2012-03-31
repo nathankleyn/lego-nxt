@@ -37,6 +37,14 @@ module NXT
         raise SerialPortConnectionError.new("The #{dev} device is not a valid SerialPort")
       end
 
+      def disconnect
+        @connection.close if @connection && !@connection.closed?
+      end
+
+      def connected?
+        !@connection.closed?
+      end
+
       def send(msg)
         # The expected data package structure for NXT Bluetooth communication is:
         #
@@ -61,14 +69,6 @@ module NXT
         # Reference: Appendix 1, Page 22
         length = @connection.sysread(2).unpack("v")[0]
         @connection.sysread(length.unpack("v")[0])
-      end
-
-      def close
-        @connection.close if @connection && !@connection.closed?
-      end
-
-      def connected?
-        !@connection.closed?
       end
     end
   end
