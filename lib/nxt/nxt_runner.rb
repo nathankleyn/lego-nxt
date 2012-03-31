@@ -67,7 +67,6 @@ class NXTRunner
       if !self.instance_variable_get(port_variable).nil?
         raise PortTakenError.new("Port #{port} is already set, call remove first")
       else
-        # FIXME: Need a different type of Exception here.
         raise InvalidIdentifierError.new("Cannot use identifier #{identifier}, a method on #{self.class} is already using it.")
       end
     end
