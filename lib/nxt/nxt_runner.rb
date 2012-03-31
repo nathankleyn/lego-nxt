@@ -48,18 +48,29 @@ class NXTRunner
       raise TypeError.new("Expected port to be one of: :#{VALID_PORTS.join(", :")}")
     end
 
-    # Makes a new instance of the class and pushes it into our instance variable
-    # for the given port.
     port_variable = :"@#{port}"
-    if self.instance_variable_get(port_variable).nil?
-      self.instance_variable_set(port_variable, klass.new(port))
-    else
-      raise PortTakenError.new("Port #{port} is already set, call remove first")
-    end
 
-    # Given that that succeeded, all that remains is to add the identifier
-    # to our lookup Hash. We'll use this Hash later on within method_missing.
-    @port_identifiers[identifier] = port
+    if !self.respond_to?(identifier)
+      # Makes a new instance of the class and pushes it into our instance variable
+      # for the given port.
+      self.instance_variable_set(port_variable, klass.new(port))
+
+      # Given that that succeeded, all that remains is to add the identifier
+      # to our lookup Hash. We'll use this Hash later on within method_missing.
+      @port_identifiers[identifier] = port
+
+      # Define a method on the eigenclass of this instance.
+      (class << self; self; end).send(:define_method, identifier) do
+        self.instance_variable_get(port_variable)
+      end
+    else
+      if !self.instance_variable_get(port_variable).nil?
+        raise PortTakenError.new("Port #{port} is already set, call remove first")
+      else
+        # FIXME: Need a different type of Exception here.
+        raise InvalidIdentifierError.new("Cannot use identifier #{identifier}, a method on #{self.class} is already using it.")
+      end
+    end
   end
 
   # Remove the assigned (if any) connector instance from the given

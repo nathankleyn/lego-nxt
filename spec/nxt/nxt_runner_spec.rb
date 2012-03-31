@@ -135,14 +135,28 @@ describe NXTRunner do
 
     it "should raise an exception if the port given is already set" do
       port = :a
+
       class_stub = Class.new
       class_stub.stub(:new)
-
+      subject.stub(:hello)
       subject.instance_variable_set(:"@#{port}", "some value already there")
 
       expect do
         subject.add(port, :hello, class_stub)
       end.to raise_error(PortTakenError, "Port #{port} is already set, call remove first")
+    end
+
+    it "should raise an exception if trying to use an identifier that is the name of a defined methodz" do
+      port = :a
+      identifier = :hello
+
+      class_stub = Class.new
+      class_stub.stub(:new)
+      subject.stub(identifier)
+
+      expect do
+        subject.add(port, :hello, class_stub)
+      end.to raise_error(InvalidIdentifierError, "Cannot use identifier #{identifier}, a method on NXTRunner is already using it.")
     end
 
     it "should set up the port identifiers correctly" do
