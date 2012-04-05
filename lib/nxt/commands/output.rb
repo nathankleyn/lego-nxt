@@ -1,6 +1,5 @@
 module NXT
   module Command
-
     # An implementation of all the output related NXT commands:
     #
     # * setoutputstate
@@ -17,6 +16,7 @@ module NXT
     # to the brick over the appropriate interface from within the {NXT::Brick}
     # class.
     module Output
+      include NXT::Command::Base
 
       # Can be :direct, or :system.
       @@command_type = :direct
@@ -69,28 +69,64 @@ module NXT
         ramp_down: 0x40
       }.freeze
 
-      def self.set_output_state(port, power, mode, regulation_mode, run_state, tacho_limit, response_required = false)
-        response_required = response_required_to_byte(@@command_type, response_required)
-        port = port_to_byte(port)
+      attr_combined_accessor :power, 75
+      attr_combined_accessor :mode, MODE[:motor_on]
+      attr_combined_accessor :regulation_mode, REGULATION_MODE[:idle]
+      attr_combined_accessor :run_state, RUN_STATE[:running]
+      attr_combined_accessor :tacho_limit, 0
 
-        unless power >= -100 && power <= 100
-          "Invalid value for power."
+      def power=(power)
+        raise TypeError.new("Expected duration to be a number") unless duration.is_a?(Integer)
+
+        @power = power
+        self
+      end
+
+      def mode=(mode)
+        unless MODE.include?(mode)
+          raise TypeError.new("Expected mode to be one of: :#{MODE.join(", :")}")
         end
 
-        mode = MODE[mode]
-        regulation_mode = REGULATION_MODE[regulation_mode]
-        run_state = RUN_STATE[run_state]
+        @mode = mode
+        self
+      end
+
+      def regulation_mode=(regulation_mode)
+        unless REGULATION_MODE.include?(mode)
+          raise TypeError.new("Expected regulation mode to be one of: :#{REGULATION_MODE.join(", :")}")
+        end
+
+        @regulation_mode = regulation_mode
+        self
+      end
+
+      def tacho_limit=(tacho_limit)
+        raise TypeError.new("Expected tacho limit to be a number") unless tacho_limit.is_a?(Integer)
+
+        @tacho_limit = tacho_limit
+        self
+      end
+
+      def set_output_state(response_required = false)
+        response_required = response_required_to_byte(@@command_type, response_required)
 
         # Pack this value into a 32-bit unsigned little-endian binary string,
         # then unpack it into 4 8 bit unsigned integer chunks. We are
         # converting the passed in value to a little endian, unsigned long
         # value.
-        tacho_limit = [tacho_limit].pack("V").unpack("C4")
+        tacho_limit_as_bytes = [self.tacho_limit].pack("V").unpack("C4")
 
-        [port, power, mode, regulation_mode, run_state, tacho_limit].flatten
+        @interface.send([
+          response_required,
+          0x04,
+          port_as_byte(self.port),
+          self.power,
+          self.mode,
+          self.regulation_mode,
+          0, # turn ratio
+          self.run_state
+        ] + tacho_limit_as_bytes)
       end
-
     end
-
   end
 end

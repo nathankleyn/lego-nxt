@@ -1,4 +1,6 @@
 class NXTRunner
+  include NXT::Exceptions
+
   VALID_PORTS = [:a, :b, :c, :one, :two, :three, :four]
 
   attr_accessor :interface, :options
@@ -69,7 +71,7 @@ class NXTRunner
     if !self.respond_to?(identifier)
       # Makes a new instance of the class and pushes it into our instance variable
       # for the given port.
-      self.instance_variable_set(port_variable, klass.new(port))
+      self.instance_variable_set(port_variable, klass.new(port, self.interface))
 
       # Given that that succeeded, all that remains is to add the identifier
       # to our lookup Hash. We'll use this Hash later on within method_missing.

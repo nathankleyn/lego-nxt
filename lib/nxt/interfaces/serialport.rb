@@ -3,7 +3,7 @@ require "serialport"
 module NXT
   module Interface
     class SerialPort < Base
-      extend NXT::Exceptions
+      include NXT::Exceptions
 
       attr_reader :dev
 
@@ -56,10 +56,13 @@ module NXT
         # Note that the length is stored in Little Endian ie. LSB -> MSB
         #
         # Reference: Appendix 1, Page 22
-        msg = [(msg.size & 255), (msg.size >> 8)] + msg
+        msg = [(msg.length & 255), (msg.length >> 8)] + msg
+
         msg.each do |b|
           @connection.putc(b)
         end
+
+        binding.pry
       end
 
       def receive
@@ -67,7 +70,7 @@ module NXT
         # to us. We unpack it, as it's stored as a 16-bit Little Endian number.
         #
         # Reference: Appendix 1, Page 22
-        length = @connection.sysread(2).unpack("v")[0]
+        length = @connection.sysread(2)
         @connection.sysread(length.unpack("v")[0])
       end
     end
