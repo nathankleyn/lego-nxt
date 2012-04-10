@@ -18,8 +18,8 @@ module NXT
     module Output
       include NXT::Command::Base
 
-      # Can be :direct, or :system.
-      @@command_type = :direct
+      @@command_type = COMMAND_TYPES[:direct]
+      @@command_identifier = 0x04
 
       # The mode enum. This is a list of possible values when setting the mode
       # byte.
@@ -70,9 +70,9 @@ module NXT
       }.freeze
 
       attr_combined_accessor :power, 75
-      attr_combined_accessor :mode, MODE[:motor_on]
-      attr_combined_accessor :regulation_mode, REGULATION_MODE[:idle]
-      attr_combined_accessor :run_state, RUN_STATE[:running]
+      attr_combined_accessor :mode, :motor_on
+      attr_combined_accessor :regulation_mode, :idle
+      attr_combined_accessor :run_state, :running
       attr_combined_accessor :tacho_limit, 0
 
       def power=(power)
@@ -84,7 +84,7 @@ module NXT
 
       def mode=(mode)
         unless MODE.include?(mode)
-          raise TypeError.new("Expected mode to be one of: :#{MODE.join(", :")}")
+          raise TypeError.new("Expected mode to be one of: :#{MODE.keys.join(", :")}")
         end
 
         @mode = mode
@@ -92,11 +92,20 @@ module NXT
       end
 
       def regulation_mode=(regulation_mode)
-        unless REGULATION_MODE.include?(mode)
-          raise TypeError.new("Expected regulation mode to be one of: :#{REGULATION_MODE.join(", :")}")
+        unless REGULATION_MODE.include?(regulation_mode)
+          raise TypeError.new("Expected regulation mode to be one of: :#{REGULATION_MODE.keys.join(", :")}")
         end
 
         @regulation_mode = regulation_mode
+        self
+      end
+
+      def run_state=(run_state)
+        unless RUN_STATE.include?(run_state)
+          raise TypeError.new("Expected run state mode to be one of: :#{RUN_STATE.keys.join(", :")}")
+        end
+
+        @run_state = run_state
         self
       end
 
@@ -108,24 +117,22 @@ module NXT
       end
 
       def set_output_state(response_required = false)
-        response_required = response_required_to_byte(@@command_type, response_required)
-
         # Pack this value into a 32-bit unsigned little-endian binary string,
         # then unpack it into 4 8 bit unsigned integer chunks. We are
         # converting the passed in value to a little endian, unsigned long
         # value.
         tacho_limit_as_bytes = [self.tacho_limit].pack("V").unpack("C4")
 
-        @interface.send([
-          response_required,
-          0x04,
+        @interface.send_and_receive([
+          @@command_type,
+          @@command_identifier,
           port_as_byte(self.port),
           self.power,
-          self.mode,
-          self.regulation_mode,
+          MODE[self.mode],
+          REGULATION_MODE[self.regulation_mode],
           0, # turn ratio
-          self.run_state
-        ] + tacho_limit_as_bytes)
+          RUN_STATE[self.run_state]
+        ] + tacho_limit_as_bytes, response_required)
       end
     end
   end

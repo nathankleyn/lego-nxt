@@ -61,8 +61,6 @@ module NXT
         msg.each do |b|
           @connection.putc(b)
         end
-
-        binding.pry
       end
 
       def receive

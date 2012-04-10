@@ -20,10 +20,6 @@ module NXT
         all: 0xFF
       }
 
-      def response_required_to_byte(command_type, response_required)
-        COMMAND_TYPES[command_type] | (response_required ? 0x80 : 0x00)
-      end
-
       def port_as_byte(port)
         PORTS[port]
       end

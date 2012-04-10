@@ -10,11 +10,7 @@ class Module
           default
         end
       else
-        if args.length == 1
-          send(:"#{sym}=", args.first)
-        else
-          raise ArgumentError.new("Wrong number of arguments (#{args.length} for 1)")
-        end
+        send(:"#{sym}=", *args)
       end
     end
   end
