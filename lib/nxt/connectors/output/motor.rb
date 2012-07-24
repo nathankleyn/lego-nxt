@@ -21,14 +21,14 @@ module NXT
         end
 
         def duration=(duration, options = {})
-          raise TypeError.new("Expected duration to be a number") unless duration.is_a?(Integer)
+          raise TypeError.new('Expected duration to be a number') unless duration.is_a?(Integer)
           @duration = duration
 
           if options.include?(:type)
             type = options[:type]
 
             unless DURATION_TYPE.include?(type)
-              raise TypeError.new("Expected duration type to be one of: :#{DURATION_TYPE.join(", :")}")
+              raise TypeError.new("Expected duration type to be one of: :#{DURATION_TYPE.join(', :')}")
             end
 
             @duration_type = type
@@ -41,12 +41,12 @@ module NXT
               after = options[:after]
 
               unless DURATION_AFTER.include?(after)
-                raise TypeError.new("Expected after option to be one of: :#{DURATION_AFTER.join(", :")}")
+                raise TypeError.new("Expected after option to be one of: :#{DURATION_AFTER.join(', :')}")
               end
 
               @duration_after = after
             else
-              raise TypeError.new("The after option is only available when the unit duration is in seconds.")
+              raise TypeError.new('The after option is only available when the unit duration is in seconds.')
             end
           else
             @duration_after = :stop
@@ -64,7 +64,7 @@ module NXT
 
         def direction=(direction)
           unless DIRECTIONS.include?(direction)
-            raise TypeError.new("Expected direction to be one of: :#{DIRECTIONS.join(", :")}")
+            raise TypeError.new("Expected direction to be one of: :#{DIRECTIONS.join(', :')}")
           end
 
           @direction = direction

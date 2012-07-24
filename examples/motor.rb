@@ -1,8 +1,8 @@
-require "nxt"
+require 'nxt'
 
 # The path to your NXT device, change this to run these examples by using the
 # environment variable NXT_DEVICE.
-device = ENV["NXT_DEVICE"] || "/dev/rfcomm0"
+device = ENV['NXT_DEVICE'] || '/dev/rfcomm0'
 interface = NXT::Interface::SerialPort.new(device)
 
 NXTRunner.new(interface) do |nxt|

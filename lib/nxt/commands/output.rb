@@ -76,7 +76,7 @@ module NXT
       attr_combined_accessor :tacho_limit, 0
 
       def power=(power)
-        raise TypeError.new("Expected duration to be a number") unless duration.is_a?(Integer)
+        raise TypeError.new('Expected duration to be a number') unless duration.is_a?(Integer)
 
         @power = power
         self
@@ -84,7 +84,7 @@ module NXT
 
       def mode=(mode)
         unless MODE.include?(mode)
-          raise TypeError.new("Expected mode to be one of: :#{MODE.keys.join(", :")}")
+          raise TypeError.new("Expected mode to be one of: :#{MODE.keys.join(', :')}")
         end
 
         @mode = mode
@@ -93,7 +93,7 @@ module NXT
 
       def regulation_mode=(regulation_mode)
         unless REGULATION_MODE.include?(regulation_mode)
-          raise TypeError.new("Expected regulation mode to be one of: :#{REGULATION_MODE.keys.join(", :")}")
+          raise TypeError.new("Expected regulation mode to be one of: :#{REGULATION_MODE.keys.join(', :')}")
         end
 
         @regulation_mode = regulation_mode
@@ -102,7 +102,7 @@ module NXT
 
       def run_state=(run_state)
         unless RUN_STATE.include?(run_state)
-          raise TypeError.new("Expected run state mode to be one of: :#{RUN_STATE.keys.join(", :")}")
+          raise TypeError.new("Expected run state mode to be one of: :#{RUN_STATE.keys.join(', :')}")
         end
 
         @run_state = run_state
@@ -110,7 +110,7 @@ module NXT
       end
 
       def tacho_limit=(tacho_limit)
-        raise TypeError.new("Expected tacho limit to be a number") unless tacho_limit.is_a?(Integer)
+        raise TypeError.new('Expected tacho limit to be a number') unless tacho_limit.is_a?(Integer)
 
         @tacho_limit = tacho_limit
         self
@@ -121,7 +121,7 @@ module NXT
         # then unpack it into 4 8 bit unsigned integer chunks. We are
         # converting the passed in value to a little endian, unsigned long
         # value.
-        tacho_limit_as_bytes = [self.tacho_limit].pack("V").unpack("C4")
+        tacho_limit_as_bytes = [self.tacho_limit].pack('V').unpack('C4')
 
         @interface.send_and_receive([
           @@command_type,

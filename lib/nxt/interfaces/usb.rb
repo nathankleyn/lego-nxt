@@ -1,4 +1,4 @@
-require "usb"
+require 'usb'
 
 module NXT
   module Interface

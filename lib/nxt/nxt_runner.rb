@@ -48,7 +48,7 @@ class NXTRunner
   def initialize(interface, options = {})
     # FIXME: Duck typing here instead?
     unless interface.is_a?(NXT::Interface::Base)
-      raise InvalidInterfaceError.new("Provided interface is not a valid type.")
+      raise InvalidInterfaceError.new('Provided interface is not a valid type.')
     end
 
     @port_identifiers = {}
@@ -92,12 +92,12 @@ class NXTRunner
   #                    be, though it must be able to hook in correctly
   #                    with the NXT library.
   def add(port, identifier, klass)
-    raise TypeError.new("Expected port to be a Symbol") unless port.is_a?(Symbol)
-    raise TypeError.new("Expected identifier to be a Symbol") unless identifier.is_a?(Symbol)
-    raise TypeError.new("Expected klass to be a Class") unless klass.is_a?(Class)
+    raise TypeError.new('Expected port to be a Symbol') unless port.is_a?(Symbol)
+    raise TypeError.new('Expected identifier to be a Symbol') unless identifier.is_a?(Symbol)
+    raise TypeError.new('Expected klass to be a Class') unless klass.is_a?(Class)
 
     unless PORTS.include?(port)
-      raise TypeError.new("Expected port to be one of: :#{PORTS.join(", :")}")
+      raise TypeError.new("Expected port to be one of: :#{PORTS.join(', :')}")
     end
 
     port_variable = :"@#{port}"
@@ -129,7 +129,7 @@ class NXTRunner
   #
   # @param Symbol identifier The identifier to search for and remove.
   def remove(identifier)
-    raise TypeError.new("Expected identifier to be a Symbol") unless identifier.is_a?(Symbol)
+    raise TypeError.new('Expected identifier to be a Symbol') unless identifier.is_a?(Symbol)
     !!@port_identifiers.delete(identifier)
   end
 
@@ -146,7 +146,7 @@ class NXTRunner
     NXT::Connector.const_get(type_const).constants.each do |const|
       # We don't use a splat here for the args, because that way when
       # people don't pass in the correct number of params, it says helpfully
-      # "1 of 2" args passed (or something similar).
+      # '1 of 2' args passed (or something similar).
       define_method("add_#{const.to_s.underscore}_#{type_const.to_s.underscore}") do |port, identifier|
         self.add(port, identifier, NXT::Connector.const_get(type_const).const_get(const))
       end
