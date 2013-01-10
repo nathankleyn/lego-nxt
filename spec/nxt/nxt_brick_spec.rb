@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NXTRunner do
+describe NXTBrick do
   before do
     @interface = stub(
       is_a?: true
@@ -8,7 +8,7 @@ describe NXTRunner do
   end
 
   subject do
-    NXTRunner.new(@interface)
+    NXTBrick.new(@interface)
   end
 
   describe 'accessors' do
@@ -68,7 +68,7 @@ describe NXTRunner do
       interface_stub = stub()
       interface_stub.should_receive(:is_a?).with(NXT::Interface::Base).once.and_return(false)
       expect do
-        NXTRunner.new(interface_stub)
+        NXTBrick.new(interface_stub)
       end.to raise_exception(InvalidInterfaceError)
     end
 
@@ -78,16 +78,16 @@ describe NXTRunner do
 
     it 'should set the options to the incomming argument' do
       options_stub = stub()
-      nxt = NXTRunner.new(@interface, options_stub)
+      nxt = NXTBrick.new(@interface, options_stub)
       nxt.options.should equal(options_stub)
     end
 
     it 'should call yield if given a block, passing self' do
       block_called = false
 
-      NXTRunner.new(@interface) do |nxt|
+      NXTBrick.new(@interface) do |nxt|
         block_called = true
-        nxt.should be_an_instance_of(NXTRunner)
+        nxt.should be_an_instance_of(NXTBrick)
       end
 
       block_called.should be_true
@@ -156,7 +156,7 @@ describe NXTRunner do
 
       expect do
         subject.add(port, :hello, class_stub)
-      end.to raise_error(InvalidIdentifierError, "Cannot use identifier #{identifier}, a method on NXTRunner is already using it.")
+      end.to raise_error(InvalidIdentifierError, "Cannot use identifier #{identifier}, a method on NXTBrick is already using it.")
     end
 
     it 'should set up the port identifiers correctly' do

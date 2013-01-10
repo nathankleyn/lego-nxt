@@ -3,13 +3,21 @@ require 'nxt'
 # The path to your NXT device, change this to run these examples by using the
 # environment variable NXT_DEVICE.
 device = ENV['NXT_DEVICE'] || '/dev/rfcomm0'
-interface = NXT::Interface::SerialPort.new(device)
 
-NXTRunner.new(interface) do |nxt|
+NXTBrick.new(:serial_port, device) do |nxt|
+  # This is the important part: with this NXT library, you add all your input
+  # and ouput and inputs here at the start. When you add one, you give it a
+  # name, and that's how you refer to it from then onwards! It's pretty cool,
+  # as it reads almost like plain English.
   nxt.add_motor_output(:a, :front_motor)
 
   # Run the motor for 2 seconds, then stop.
   nxt.front_motor.duration(2).move
+
+  sleep(2)
+
+  # Run the motor for 2 seconds backwards, then stop.
+  nxt.front_motor.duration(2).backwards.move
 
   sleep(2)
 

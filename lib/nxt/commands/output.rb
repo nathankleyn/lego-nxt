@@ -17,6 +17,7 @@ module NXT
     # class.
     module Output
       include NXT::Command::Base
+      extend NXT::Utils::Accessors
 
       @@command_type = COMMAND_TYPES[:direct]
       @@command_identifier = 0x04
@@ -75,46 +76,11 @@ module NXT
       attr_combined_accessor :run_state, :running
       attr_combined_accessor :tacho_limit, 0
 
-      def power=(power)
-        raise TypeError.new('Expected duration to be a number') unless duration.is_a?(Integer)
-
-        @power = power
-        self
-      end
-
-      def mode=(mode)
-        unless MODE.include?(mode)
-          raise TypeError.new("Expected mode to be one of: :#{MODE.keys.join(', :')}")
-        end
-
-        @mode = mode
-        self
-      end
-
-      def regulation_mode=(regulation_mode)
-        unless REGULATION_MODE.include?(regulation_mode)
-          raise TypeError.new("Expected regulation mode to be one of: :#{REGULATION_MODE.keys.join(', :')}")
-        end
-
-        @regulation_mode = regulation_mode
-        self
-      end
-
-      def run_state=(run_state)
-        unless RUN_STATE.include?(run_state)
-          raise TypeError.new("Expected run state mode to be one of: :#{RUN_STATE.keys.join(', :')}")
-        end
-
-        @run_state = run_state
-        self
-      end
-
-      def tacho_limit=(tacho_limit)
-        raise TypeError.new('Expected tacho limit to be a number') unless tacho_limit.is_a?(Integer)
-
-        @tacho_limit = tacho_limit
-        self
-      end
+      attr_setter :power, is: Integer
+      attr_setter :mode, is_key_in: MODE
+      attr_setter :regulation_mode, is_key_in: REGULATION_MODE
+      attr_setter :run_state, is_key_in: RUN_STATE
+      attr_setter :tacho_limit, is: Integer
 
       def set_output_state(response_required = false)
         # Pack this value into a 32-bit unsigned little-endian binary string,

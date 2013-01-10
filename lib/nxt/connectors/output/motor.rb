@@ -3,10 +3,11 @@ module NXT
     module Output
       class Motor
         include NXT::Command::Output
+        extend NXT::Utils::Accessors
 
         DURATION_TYPE = [:seconds, :degrees, :rotations].freeze
         DURATION_AFTER = [:coast, :brake].freeze
-        DIRECTIONS = [:forwards, :backwards].freeze
+        DIRECTION = [:forwards, :backwards].freeze
 
         attr_accessor :port, :interface
 
@@ -14,6 +15,8 @@ module NXT
         attr_combined_accessor :duration_type, :seconds
         attr_combined_accessor :duration_after, :stop
         attr_combined_accessor :direction, :forwards
+
+        attr_setter :direction, is_key_in: DIRECTION
 
         def initialize(port, interface)
           @port = port
@@ -62,21 +65,14 @@ module NXT
           self
         end
 
-        def direction=(direction)
-          unless DIRECTIONS.include?(direction)
-            raise TypeError.new("Expected direction to be one of: :#{DIRECTIONS.join(', :')}")
-          end
-
-          @direction = direction
-          self
-        end
-
         def forwards
           self.direction = :forwards
+          self
         end
 
         def backwards
           self.direction = :backwards
+          self
         end
 
         def stop(type = :coast)

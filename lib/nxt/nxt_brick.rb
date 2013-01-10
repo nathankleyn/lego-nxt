@@ -8,29 +8,26 @@
 #
 # @example Creating an instance using a block, with one motor output.
 #
-#   NXTRunner.new(interface) do |nxt|
+#   NXTBrick.new(interface) do |nxt|
 #     nxt.add_motor_output(:a, :front_left)
 #   end
 #
 # @example Creating an instance without a block, with one motor and one light sensor.
 #
-#   nxt = NXTRunner.new(interface)
+#   nxt = NXTBrick.new(interface)
 #   nxt.add_motor_output(:a, :front_left)
 #   # ...
 #   nxt.disconnect
-class NXTRunner
+class NXTBrick
   include NXT::Exceptions
 
   # An enumeration of possible ports, both input and output, that the NXT brick
-  # can have connectors connected to.
+  # can have connectors attached to.
   PORTS = [:a, :b, :c, :one, :two, :three, :four]
 
   # Get the instance of the interface that this runner class is using to connect
   # to the NXT brick.
   attr_reader :interface
-
-  # Get or set various options that this runner class can use while operating.
-  attr_accessor :options
 
   # Accessors for output ports on the NXT brick. These will be populated with
   # the appropriate instances of their respective output connectors.
@@ -45,16 +42,15 @@ class NXTRunner
   # be done.
   attr_reader :port_identifiers
 
-  def initialize(interface, options = {})
-    # FIXME: Duck typing here instead?
-    unless interface.is_a?(NXT::Interface::Base)
-      raise InvalidInterfaceError.new('Provided interface is not a valid type.')
+  def initialize(interface_type, *interface_args)
+    @port_identifiers = {}
+    interface_type = interface_type.to_s.classify
+
+    unless NXT::Interface.constants.include?(interface_type.to_sym)
+      raise InvalidInterfaceError.new("There is no interface of type #{interface_type}.")
     end
 
-    @port_identifiers = {}
-
-    self.interface = interface
-    self.options = options
+    self.interface = NXT::Interface.const_get(interface_type).new(*interface_args)
 
     if block_given?
       begin
@@ -72,7 +68,7 @@ class NXTRunner
   end
 
   # Close the connection to the NXT brick, and dispose of any resources that
-  # this instance of NXTRunner is using. Any commands run against this runner
+  # this instance of NXTBrick is using. Any commands run against this runner
   # after calling disconnect will fail.
   def disconnect
     self.interface.disconnect

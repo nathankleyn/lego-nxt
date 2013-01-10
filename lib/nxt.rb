@@ -8,7 +8,7 @@ require 'nxt/exceptions'
 
 require 'nxt/interfaces/base'
 require 'nxt/interfaces/usb'
-require 'nxt/interfaces/serialport'
+require 'nxt/interfaces/serial_port'
 
 require 'nxt/commands/base'
 require 'nxt/commands/input'
@@ -22,4 +22,4 @@ require 'nxt/connectors/input/touch'
 require 'nxt/connectors/input/ultrasonic'
 require 'nxt/connectors/output/motor'
 
-require 'nxt/nxt_runner'
+require 'nxt/nxt_brick'
