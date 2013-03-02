@@ -25,12 +25,12 @@ module NXT
       def connect
         @connection = ::SerialPort.new(@dev, BAUD_RATE, DATA_BITS, STOP_BITS, PARITY)
 
-        if !@connection.nil?
-          @connection.flow_control = ::SerialPort::HARD
-          @connection.read_timeout = READ_TIMEOUT
-        else
+        if @connection.nil?
           raise SerialPortConnectionError.new("Could not establish a SerialPort connection to #{dev}")
         end
+
+        @connection.flow_control = ::SerialPort::HARD
+        @connection.read_timeout = READ_TIMEOUT
 
         @connection
       rescue ArgumentError
@@ -38,11 +38,11 @@ module NXT
       end
 
       def disconnect
-        @connection.close if @connection && !@connection.closed?
+        @connection.close if self.connected?
       end
 
       def connected?
-        !@connection.closed?
+        @connection && !@connection.closed?
       end
 
       def send(msg)

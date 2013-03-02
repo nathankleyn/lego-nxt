@@ -23,3 +23,5 @@ require 'nxt/connectors/input/ultrasonic'
 require 'nxt/connectors/output/motor'
 
 require 'nxt/nxt_brick'
+
+require 'pry'

@@ -19,5 +19,8 @@ module NXT
 
     # Raised when communication with a Serial Port connection fails.
     class SerialPortConnectionError < RuntimeError; end
+
+    # Raised when communication with a USB Port connection fails.
+    class UsbConnectionError < RuntimeError; end
   end
 end

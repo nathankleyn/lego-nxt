@@ -1,3 +1,5 @@
+require 'nxt/utils/accessors'
+
 module NXT
   module Command
     # An implementation of all the output related NXT commands:

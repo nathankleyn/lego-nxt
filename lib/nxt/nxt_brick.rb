@@ -27,7 +27,7 @@ class NXTBrick
 
   # Get the instance of the interface that this runner class is using to connect
   # to the NXT brick.
-  attr_reader :interface
+  attr_accessor :interface
 
   # Accessors for output ports on the NXT brick. These will be populated with
   # the appropriate instances of their respective output connectors.
@@ -56,6 +56,8 @@ class NXTBrick
       begin
         self.connect
         yield(self)
+      rescue Exception => e
+        binding.pry
       ensure
         self.disconnect
       end

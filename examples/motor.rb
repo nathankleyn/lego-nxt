@@ -4,7 +4,8 @@ require 'nxt'
 # environment variable NXT_DEVICE.
 device = ENV['NXT_DEVICE'] || '/dev/rfcomm0'
 
-NXTBrick.new(:serial_port, device) do |nxt|
+# NXTBrick.new(:serial_port, device) do |nxt|
+NXTBrick.new(:usb) do |nxt|
   # This is the important part: with this NXT library, you add all your input
   # and ouput and inputs here at the start. When you add one, you give it a
   # name, and that's how you refer to it from then onwards! It's pretty cool,

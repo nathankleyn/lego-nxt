@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'nxt'
-  spec.version = '0.1.0'
+  spec.version = '0.1.1'
   spec.extra_rdoc_files = ['README.markdown']
   spec.summary = ''
   spec.description = spec.summary + ' See http://github.com/nathankleyn/nxt for more information.'
@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency('serialport', '~>1.0.4')
   spec.add_dependency('activesupport', '~>3.2.2')
-  spec.add_dependency('ruby-usb', '~>0.2.1')
+  spec.add_dependency('libusb', '~>0.3.2')
   spec.add_development_dependency('rspec', '~>2.8.0')
   spec.add_development_dependency('pry', '~>0.9.8.4')
   spec.add_development_dependency('yard', '~>0.7.5')
