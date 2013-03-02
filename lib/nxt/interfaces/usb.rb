@@ -9,7 +9,7 @@ module NXT
       ID_PRODUCT_NXT = 0x0002
       OUT_ENDPOINT = 0x01
       IN_ENDPOINT = 0x82
-      TIMEOUT = 1000
+      TIMEOUT = 10000
       READSIZE = 64
       INTERFACE = 0
 

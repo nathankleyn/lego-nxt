@@ -4,8 +4,7 @@ require 'nxt'
 # environment variable NXT_DEVICE.
 device = ENV['NXT_DEVICE'] || '/dev/rfcomm0'
 
-# NXTBrick.new(:serial_port, device) do |nxt|
-NXTBrick.new(:usb) do |nxt|
+NXTBrick.new(:serial_port, device) do |nxt|
   # This is the important part: with this NXT library, you add all your input
   # and ouput and inputs here at the start. When you add one, you give it a
   # name, and that's how you refer to it from then onwards! It's pretty cool,
@@ -15,12 +14,12 @@ NXTBrick.new(:usb) do |nxt|
   # Run the motor for 2 seconds, then stop.
   nxt.front_motor.duration(2).move
 
-  sleep(2)
+  sleep(2) # FIXME: Shouldn't need to do this.
 
   # Run the motor for 2 seconds backwards, then stop.
   nxt.front_motor.duration(2).backwards.move
 
-  sleep(2)
+  sleep(2) # FIXME: Shouldn't need to do this.
 
   # Run the motor for 5 rotations instead.
   nxt.front_motor.duration(5, type: :rotations).move
