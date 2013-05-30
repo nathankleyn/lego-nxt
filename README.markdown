@@ -21,7 +21,7 @@ In order to start coding with your NXT, you'll need to set up either a
 Bluetooth or USB connection to it. Follow one of the below set of steps, and
 make a note of the `/dev/*` address you end up using to point to the NXT.
 
-### Creating a Bluetooth Serialport Connection
+#### Connecting Via Bluetooth
 
 For instructions on creating a bluetooth serialport connection:
 
@@ -29,7 +29,7 @@ For instructions on creating a bluetooth serialport connection:
 * Max OSX: http://tonybuser.com/bluetooth-serial-port-to-nxt-in-osx
 * Windows: http://tonybuser.com/ruby-serialportnxt-on-windows
 
-### Creating a USB Serialport Connection
+### Connecting Via USB
 
 TODO
 
