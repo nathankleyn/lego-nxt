@@ -20,6 +20,14 @@ module NXT
         all: 0xFF
       }
 
+      def send_and_receive(command_identifier, payload = [], response_required = true)
+        @interface.send_and_receive([
+          @@command_type,
+          COMMAND_IDENTIFIER[command_identifier],
+          port_as_byte(self.port)
+        ] + payload, response_required)
+      end
+
       def port_as_byte(port)
         PORTS[port]
       end

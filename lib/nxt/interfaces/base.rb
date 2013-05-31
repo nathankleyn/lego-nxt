@@ -2,14 +2,15 @@ module NXT
   module Interface
     class Base
       def send_and_receive(msg, response_required = true)
-        if response_required
-          msg[0] = msg[0] | (response_required ? 0x80 : 0x00)
+        unless response_required
+          msg[0] = msg[0] | 0x80
         end
 
         self.send(msg)
 
         if response_required
           response = self.receive
+          binding.pry
           response
         end
       end

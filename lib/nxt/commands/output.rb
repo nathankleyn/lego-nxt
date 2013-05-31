@@ -4,25 +4,24 @@ module NXT
   module Command
     # An implementation of all the output related NXT commands:
     #
-    # * setoutputstate
-    # * getoutputstate
+    # * SETOUTPUTSTATE
+    # * GETOUTPUTSTATE
     #
     # This is used predominantly to interface with the servo-motor connectors
     # that come prepackaged with NXT kits.
     #
     # This class can also be used to talk to other third-party accessories
     # connected in the output ports on the NXT brick.
-    #
-    # This class does not actually talk to the chosen interface for the NXT
-    # brick. Instead, it outputs messages in byte arrays ready to be serialised
-    # to the brick over the appropriate interface from within the {NXT::Brick}
-    # class.
     module Output
       include NXT::Command::Base
       extend NXT::Utils::Accessors
 
       @@command_type = COMMAND_TYPES[:direct]
-      @@command_identifier = 0x04
+
+      COMMAND_IDENTIFIER = {
+        set_output_state: 0x04,
+        get_output_state: 0x06
+      }.freeze
 
       # The mode enum. This is a list of possible values when setting the mode
       # byte.
@@ -91,16 +90,18 @@ module NXT
         # value.
         tacho_limit_as_bytes = [self.tacho_limit].pack('V').unpack('C4')
 
-        @interface.send_and_receive([
-          @@command_type,
-          @@command_identifier,
-          port_as_byte(self.port),
+        send_and_receive(:set_output_state, [
           self.power,
           MODE[self.mode],
           REGULATION_MODE[self.regulation_mode],
           0, # turn ratio
           RUN_STATE[self.run_state]
         ] + tacho_limit_as_bytes, response_required)
+      end
+
+      def get_output_state
+        # TODO: Parse this response and return hash or something similar.
+        send_and_receive(:get_output_state)
       end
     end
   end
