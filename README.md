@@ -8,6 +8,16 @@ This code implements direct command, as outlined in "Appendix 2-LEGO MINDSTORMS 
 
 ## Getting Started
 
+### Installing This Library
+
+Install the gem:
+
+```sh
+gem install lego-nxt
+```
+
+Add it as a Bundler dependency as you see fit!
+
 ### Connect to Your NXT Brick
 
 In order to start coding with your NXT, you'll need to set up either a USB or Bluetooth connection to it. Follow one of the below sets of steps; if you go for a Bluetooth connection, you'll need to remember the `/dev/*` address you end up using, as you'll need to provide it when making a connection with this library.
