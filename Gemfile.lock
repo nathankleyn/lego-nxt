@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nxt (0.2.0)
+    lego-nxt (0.2.0)
       activesupport (~> 3.2.13)
       libusb (~> 0.3.4)
       serialport (~> 1.1.0)
@@ -41,7 +41,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  nxt!
+  lego-nxt!
   pry (~> 0.9.12.2)
   redcarpet (~> 2.3.0)
   rspec (~> 2.13.0)
