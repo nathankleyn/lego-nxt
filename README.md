@@ -51,7 +51,7 @@ $ sudo /etc/init.d/bluez-utils
 On other distros where you manage the Bluetooth daemon yourself, you'll need to do the bind calls yourself:
 
 ```sh
-$ sudo rmcomm bind /dev/rfcomm0 '90-8E-E0-C1-2A-7B'
+$ sudo rfcomm bind /dev/rfcomm0 '90-8E-E0-C1-2A-7B'
 ```
 
 After that, the Bluetooth connection should be established. Check that by running the `rfcomm` command with no arguments:
