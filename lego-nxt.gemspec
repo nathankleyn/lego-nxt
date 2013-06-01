@@ -4,10 +4,11 @@ Gem::Specification.new do |spec|
   spec.extra_rdoc_files = ['README.md']
   spec.summary = 'Ruby LEGO Mindstorms NXT 2.0 control via Bluetooth and USB.'
   spec.description = spec.summary + ' See http://github.com/nathankleyn/lego-nxt for more information.'
+  spec.license = 'MIT'
   spec.author = 'Nathan Kleyn'
   spec.email = 'nathan@nathankleyn.com'
   spec.homepage = 'http://github.com/nathankleyn/lego-nxt'
-  spec.files = %w(README.markdown Rakefile) + Dir.glob('{lib,spec}/**/*')
+  spec.files = %w(README.md Rakefile) + Dir.glob('{lib,spec}/**/*')
   spec.require_path = 'lib'
 
   spec.add_dependency('serialport', '~>1.1.0')

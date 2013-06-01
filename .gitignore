@@ -1,3 +1,5 @@
+*.gem
+
 /bin
 /doc
 /.bundle
