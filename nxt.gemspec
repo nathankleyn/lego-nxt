@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'nxt'
-  spec.version = '0.1.1'
+  spec.version = '0.2.0'
   spec.extra_rdoc_files = ['README.markdown']
   spec.summary = ''
   spec.description = spec.summary + ' See http://github.com/nathankleyn/nxt for more information.'

@@ -16,8 +16,6 @@ module NXT
       include NXT::Command::Base
       extend NXT::Utils::Accessors
 
-      @@command_type = COMMAND_TYPES[:direct]
-
       COMMAND_IDENTIFIER = {
         set_output_state: 0x04,
         get_output_state: 0x06
@@ -83,6 +81,10 @@ module NXT
       attr_setter :run_state, is_key_in: RUN_STATE
       attr_setter :tacho_limit, is: Integer
 
+      def command_type
+        COMMAND_TYPES[:direct]
+      end
+
       def set_output_state(response_required = false)
         # Pack this value into a 32-bit unsigned little-endian binary string,
         # then unpack it into 4 8 bit unsigned integer chunks. We are
@@ -90,7 +92,7 @@ module NXT
         # value.
         tacho_limit_as_bytes = [self.tacho_limit].pack('V').unpack('C4')
 
-        send_and_receive(:set_output_state, [
+        send_and_receive(COMMAND_IDENTIFIER[:set_output_state], [
           self.power,
           MODE[self.mode],
           REGULATION_MODE[self.regulation_mode],
@@ -101,7 +103,7 @@ module NXT
 
       def get_output_state
         # TODO: Parse this response and return hash or something similar.
-        send_and_receive(:get_output_state)
+        send_and_receive(COMMAND_IDENTIFIER[:get_output_state])
       end
     end
   end

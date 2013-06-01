@@ -14,8 +14,6 @@ module NXT
       include NXT::Command::Base
       extend NXT::Utils::Accessors
 
-      @@command_type = COMMAND_TYPES[:direct]
-
       COMMAND_IDENTIFIER = {
         set_input_mode: 0x05,
         get_input_values: 0x07,
@@ -65,8 +63,12 @@ module NXT
       attr_setter :sensor_type, is_key_in: SENSOR_TYPE
       attr_setter :sensor_mode, is_key_in: SENSOR_MODE
 
+      def command_type
+        COMMAND_TYPES[:direct]
+      end
+
       def set_input_mode(response_required = false)
-        send_and_receive(:set_input_mode, [
+        send_and_receive(COMMAND_IDENTIFIER[:set_input_mode], [
           self.power,
           SENSOR_TYPE[self.sensor_type],
           SENSOR_MODE[self.sensor_mode]
@@ -75,12 +77,12 @@ module NXT
 
       def get_input_values
         # TODO: Parse this response and return hash or something similar.
-        send_and_receive(:get_input_values)
+        send_and_receive(COMMAND_IDENTIFIER[:get_input_values])
       end
 
       def reset_input_scaled_value
         # TODO: Parse this response and return hash or something similar.
-        send_and_receive(:reset_input_scaled_value)
+        send_and_receive(COMMAND_IDENTIFIER[:reset_input_scaled_value])
       end
     end
   end

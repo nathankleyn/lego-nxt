@@ -10,7 +10,6 @@ module NXT
 
         if response_required
           response = self.receive
-          binding.pry
           response
         end
       end
