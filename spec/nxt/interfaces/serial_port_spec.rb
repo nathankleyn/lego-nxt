@@ -3,7 +3,6 @@ require 'spec_helper'
 describe NXT::Interface::SerialPort do
   before do
     @device = '/dev/zero'
-    @bad_device = 'hello world'
   end
 
   subject do
@@ -34,7 +33,7 @@ describe NXT::Interface::SerialPort do
 
     it 'should raise an exception when trying to connect to invalid dev files' do
       expect do
-        subject.class.new(@bad_device)
+        subject.class.new('/dev/foobar')
       end.to raise_exception(InvalidDeviceError)
     end
   end
