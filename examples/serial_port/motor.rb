@@ -1,4 +1,4 @@
-require 'nxt'
+require 'lego-nxt'
 
 # The path to your NXT device, change this to run these examples by using the
 # environment variable NXT_DEVICE.

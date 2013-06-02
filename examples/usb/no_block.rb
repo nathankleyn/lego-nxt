@@ -1,4 +1,4 @@
-require 'nxt'
+require 'lego-nxt'
 
 nxt = NXTBrick.new(:usb)
 

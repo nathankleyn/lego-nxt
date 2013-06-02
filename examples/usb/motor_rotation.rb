@@ -1,4 +1,4 @@
-require 'nxt'
+require 'lego-nxt'
 
 NXTBrick.new(:usb) do |nxt|
   # This is the important part: with this NXT library, you add all your input

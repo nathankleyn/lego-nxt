@@ -1,4 +1,4 @@
 require 'matchers'
-require 'nxt'
+require 'lego-nxt'
 
 include NXT::Exceptions
