@@ -1,4 +1,5 @@
-# Lego NXT
+# Lego NXT [![Build Status](https://travis-ci.org/nathankleyn/lego-nxt.png)](https://travis-ci.org/nathankleyn/lego-nxt)
+
 
 Control a Lego NXT 2.0 brick using Ruby code. This library works by piping commands over a serialport connection to the brick, allowing you to write Ruby scripts to control your bot. This means you can use both the Bluetooth and USB serial ports provided on the brick as interfaces within your code.
 
