@@ -34,7 +34,7 @@ describe NXT::Interface::SerialPort do
 
     it 'should raise an exception when trying to connect to invalid dev files' do
       expect do
-        serial_port = subject.class.new(@bad_device)
+        subject.class.new(@bad_device)
       end.to raise_exception(InvalidDeviceError)
     end
   end
@@ -43,7 +43,7 @@ describe NXT::Interface::SerialPort do
     it 'should raise an exception when the SerialPort connection failed' do
       expect do
         subject.connect
-      end.to raise_exception(SerialPortConnectionError, 'The #{@device} device is not a valid SerialPort')
+      end.to raise_exception(SerialPortConnectionError, "The #{@device} device is not a valid SerialPort")
     end
 
     it 'should raise an exception when the SerialPort connection is nil' do

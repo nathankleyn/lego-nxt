@@ -22,7 +22,7 @@ Add it as a Bundler dependency as you see fit!
 
 In order to start coding with your NXT, you'll need to set up either a USB or Bluetooth connection to it. Follow one of the below sets of steps; if you go for a Bluetooth connection, you'll need to remember the `/dev/*` address you end up using, as you'll need to provide it when making a connection with this library.
 
-### Connecting Via USB
+#### Connecting Via USB
 
 Simply plug in the NXT, and that's it! This library will take care of enumerating the USB host devices to find the NXT device for you, no effort required on your behalf!
 

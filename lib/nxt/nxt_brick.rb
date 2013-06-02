@@ -57,7 +57,7 @@ class NXTBrick
         self.connect
         yield(self)
       rescue Exception => e
-        binding.pry
+        puts e
       ensure
         self.disconnect
       end

@@ -1,25 +1,14 @@
 require 'spec_helper'
 
 describe NXTBrick do
-  before do
-    @interface = stub(
-      is_a?: true
-    )
-  end
-
   subject do
-    NXTBrick.new(@interface)
+    NXTBrick.new(:usb)
   end
 
   describe 'accessors' do
     it 'should have read/write accessors for @interface' do
       should respond_to(:interface)
       should respond_to(:interface=)
-    end
-
-    it 'should have read/write accessors for @options' do
-      should respond_to(:options)
-      should respond_to(:options=)
     end
 
     it 'should have a read accessor for @a' do
@@ -65,27 +54,21 @@ describe NXTBrick do
 
   describe '#initialize' do
     it 'should raise an exception if an invalid type of interface is given' do
-      interface_stub = stub()
-      interface_stub.should_receive(:is_a?).with(NXT::Interface::Base).once.and_return(false)
       expect do
-        NXTBrick.new(interface_stub)
+        NXTBrick.new(:foobar)
       end.to raise_exception(InvalidInterfaceError)
     end
 
     it 'should set the interface to the incomming argument' do
-      subject.interface.should equal(@interface)
-    end
-
-    it 'should set the options to the incomming argument' do
-      options_stub = stub()
-      nxt = NXTBrick.new(@interface, options_stub)
-      nxt.options.should equal(options_stub)
+      subject.interface.should be_an_instance_of(NXT::Interface::Usb)
     end
 
     it 'should call yield if given a block, passing self' do
       block_called = false
 
-      NXTBrick.new(@interface) do |nxt|
+      NXT::Interface::Usb.any_instance.stub(:connect)
+
+      NXTBrick.new(:usb) do |nxt|
         block_called = true
         nxt.should be_an_instance_of(NXTBrick)
       end
@@ -126,7 +109,7 @@ describe NXTBrick do
 
       class_stub.should_receive(:new) do
         class_return_stub
-      end.with(port).once()
+      end.with(port, an_instance_of(NXT::Interface::Usb)).once()
 
       subject.add(port, :hello, class_stub)
 
