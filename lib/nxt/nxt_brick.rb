@@ -51,30 +51,28 @@ class NXTBrick
       raise InvalidInterfaceError.new("There is no interface of type #{interface_type}.")
     end
 
-    self.interface = NXT::Interface.const_get(interface_type).new(*interface_args)
+    @interface = NXT::Interface.const_get(interface_type).new(*interface_args)
 
     if block_given?
       begin
-        self.connect
+        connect
         yield(self)
-      rescue Exception => e
-        puts e
       ensure
-        self.disconnect
+        disconnect
       end
     end
   end
 
   # Connect using the given interface to the NXT brick.
   def connect
-    self.interface.connect
+    @interface.connect
   end
 
   # Close the connection to the NXT brick, and dispose of any resources that
   # this instance of NXTBrick is using. Any commands run against this runner
   # after calling disconnect will fail.
   def disconnect
-    self.interface.disconnect
+    @interface.disconnect
   end
 
   # Add a new connector instance, binding a specific identifier to the given
@@ -95,8 +93,8 @@ class NXTBrick
     assert_responds_to('identifier', identifier, :to_sym)
     assert_type('klass', klass, Class)
 
-    if self.respond_to?(identifier)
-      if self.instance_variable_get(:"@#{port}").nil?
+    if respond_to?(identifier)
+      if instance_variable_get(:"@#{port}").nil?
         raise InvalidIdentifierError.new("Cannot use identifier #{identifier}, a method on #{self.class} is already using it.")
       else
         raise PortTakenError.new("Port #{port} is already set, call remove first")
@@ -107,7 +105,7 @@ class NXTBrick
   end
 
   # Remove the assigned (if any) connector instance from the given
-  # identifier.
+  # identifier.interface
   #
   # @param Symbol identifier The identifier to search for and remove.
   def remove(identifier)
@@ -130,7 +128,7 @@ class NXTBrick
       # people don't pass in the correct number of params, it says helpfully
       # '1 of 2' args passed (or something similar).
       define_method("add_#{const.to_s.underscore}_#{type_const.to_s.underscore}") do |port, identifier|
-        self.add(port, identifier, NXT::Connector.const_get(type_const).const_get(const))
+        add(port, identifier, NXT::Connector.const_get(type_const).const_get(const))
       end
     end
   end
@@ -142,7 +140,7 @@ class NXTBrick
 
     # Makes a new instance of the class and pushes it into our instance variable
     # for the given port.
-    self.instance_variable_set(port_variable, klass.new(port, self.interface))
+    instance_variable_set(port_variable, klass.new(port, interface))
 
     # Given that that succeeded, all that remains is to add the identifier
     # to our lookup Hash. We'll use this Hash later on within method_missing.
@@ -150,7 +148,7 @@ class NXTBrick
 
     # Define a method on the eigenclass of this instance.
     (class << self; self; end).send(:define_method, identifier.to_sym) do
-      self.instance_variable_get(port_variable)
+      instance_variable_get(port_variable)
     end
   end
 end

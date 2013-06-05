@@ -77,56 +77,78 @@ describe NXTBrick do
     end
   end
 
+  describe '#connect' do
+    before do
+      @interface = Object.new
+      subject.instance_variable_set(:@interface, @interface)
+    end
+
+    it 'should call connect on the interface' do
+      @interface.should_receive(:connect)
+      subject.connect
+    end
+  end
+
+  describe '#disconnect' do
+    before do
+      @interface = Object.new
+      subject.instance_variable_set(:@interface, @interface)
+    end
+
+    it 'should call disconnect on the interface' do
+      @interface.should_receive(:disconnect)
+      subject.disconnect
+    end
+  end
+
   describe '#add' do
     before do
+      @port = :a
+      @identifier = :hello
+      @class_stub = Class.new
+      @class_stub.stub(:new)
+
       subject.stub(:define_port_handler_method)
     end
 
     it 'should raise an exception if an invalid port number or letter is given' do
       expect do
-        subject.add(:invalid_port, :symbol, Class)
+        subject.add(:invalid_port, @identifier, @class_stub)
       end.to raise_exception(TypeError, 'Expected port to be one of: :a, :b, :c, :one, :two, :three, :four')
     end
 
     it 'should raise an exception if an invalid type of identifier is given' do
       expect do
-        subject.add(:a, 123, Class)
+        subject.add(@port, 123, @class_stub)
       end.to raise_exception(TypeError, 'Expected identifier to respond to: to_sym')
     end
 
     it 'should raise an exception if an invalid type of klass is given' do
       expect do
-        subject.add(:a, :symbol, 'not a class')
+        subject.add(@port, @identifier, 'not a class')
       end.to raise_exception(TypeError, 'Expected klass to be of type Class')
     end
 
-    it 'should raise an exception if the port given is already set' do
-      port = :a
-
-      class_stub = Class.new
-      class_stub.stub(:new)
-      subject.stub(:hello)
-      subject.instance_variable_set(:"@#{port}", 'some value already there')
+    it 'should raise an exception if trying to use an identifier that is the name of a defined methodz' do
+      subject.stub(@identifier)
 
       expect do
-        subject.add(port, :hello, class_stub)
-      end.to raise_error(PortTakenError, "Port #{port} is already set, call remove first")
+        subject.add(@port, @identifier, @class_stub)
+      end.to raise_error(InvalidIdentifierError, "Cannot use identifier #{@identifier}, a method on NXTBrick is already using it.")
     end
 
-    it 'should raise an exception if trying to use an identifier that is the name of a defined methodz' do
-      port = :a
-      identifier = :hello
-
-      class_stub = Class.new
-      class_stub.stub(:new)
-      subject.stub(identifier)
+    it 'should raise an exception if the port given is already set' do
+      subject.stub(@identifier)
+      subject.instance_variable_set(:"@#{@port}", 'some value already there')
 
       expect do
-        subject.add(port, :hello, class_stub)
-      end.to raise_error(InvalidIdentifierError, "Cannot use identifier #{identifier}, a method on NXTBrick is already using it.")
+        subject.add(@port, @identifier, @class_stub)
+      end.to raise_error(PortTakenError, "Port #{@port} is already set, call remove first")
     end
 
     it 'should call #define_port_handler_method' do
+      subject.should_receive(:define_port_handler_method).with(@port, @identifier, @class_stub)
+      subject.add(@port, @identifier, @class_stub)
     end
   end
 
@@ -163,29 +185,27 @@ describe NXTBrick do
   end
 
   describe '#define_port_handler_method' do
+    before do
+      @port = :a
+      @identifier = :hello
+      @class_stub = Class.new
+      @class_stub.stub(:new)
+    end
+
     it 'should create a new instance of the passed klass and store it in the attribute for the given port' do
-      port = :a
-      class_stub = Class.new
       class_return_stub = stub()
-
-      class_stub.should_receive(:new) do
+      @class_stub.should_receive(:new) do
         class_return_stub
-      end.with(port, an_instance_of(NXT::Interface::Usb)).once()
+      end.with(@port, an_instance_of(NXT::Interface::Usb)).once()
 
-      subject.send(:define_port_handler_method, port, :hello, class_stub)
+      subject.send(:define_port_handler_method, @port, @identifier, @class_stub)
 
-      subject.send(port).should equal(class_return_stub)
+      subject.send(@port).should equal(class_return_stub)
     end
 
     it 'should set up the port identifiers correctly' do
-      port = :a
-      identifier = :hello_world
-      class_stub = Class.new
-      class_stub.stub(:new)
-
-      subject.send(:define_port_handler_method, port, identifier, class_stub)
-
-      subject.port_identifiers[identifier].should equal(port)
+      subject.send(:define_port_handler_method, @port, @identifier, @class_stub)
+      subject.port_identifiers[@identifier].should equal(@port)
     end
   end
 end

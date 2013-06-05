@@ -6,8 +6,8 @@ require 'nxt/patches/module'
 
 require 'nxt/exceptions'
 
-require 'nxt/utils/accessors'
 require 'nxt/utils/assertions'
+require 'nxt/utils/accessors'
 
 require 'nxt/interfaces/base'
 require 'nxt/interfaces/usb'
