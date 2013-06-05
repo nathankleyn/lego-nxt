@@ -1,6 +1,7 @@
 *.gem
 
 /bin
+/coverage
 /doc
 /.bundle
 /.yardoc
