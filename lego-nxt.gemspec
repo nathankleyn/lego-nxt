@@ -16,7 +16,9 @@ Gem::Specification.new do |spec|
   spec.add_dependency('serialport', '~>1.1.0')
   spec.add_development_dependency('coveralls', '~>0.6.7')
   spec.add_development_dependency('redcarpet', '~>2.3.0')
+  spec.add_development_dependency('rev', '~>0.3.2')
   spec.add_development_dependency('rspec', '~>2.13.0')
   spec.add_development_dependency('pry', '~>0.9.12.2')
+  spec.add_development_dependency('watchr', '~>0.7.0')
   spec.add_development_dependency('yard', '~>0.8.6.1')
 end

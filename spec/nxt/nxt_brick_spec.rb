@@ -78,22 +78,8 @@ describe NXTBrick do
   end
 
   describe '#add' do
-    it 'should raise an exception if an invalid type of port is given' do
-      expect do
-        subject.add('not a symbol', :symbol, Class)
-      end.to raise_exception(TypeError, 'Expected port to be a Symbol')
-    end
-
-    it 'should raise an exception if an invalid type of identifier is given' do
-      expect do
-        subject.add(:symbol, 'not a symbol', Class)
-      end.to raise_exception(TypeError, 'Expected identifier to be a Symbol')
-    end
-
-    it 'should raise an exception if an invalid type of klass is given' do
-      expect do
-        subject.add(:symbol, :symbol, 'not a class')
-      end.to raise_exception(TypeError, 'Expected klass to be a Class')
+    before do
+      subject.stub(:define_port_handler_method)
     end
 
     it 'should raise an exception if an invalid port number or letter is given' do
@@ -102,18 +88,16 @@ describe NXTBrick do
       end.to raise_exception(TypeError, 'Expected port to be one of: :a, :b, :c, :one, :two, :three, :four')
     end
 
-    it 'should create a new instance of the passed klass and store it in the attribute for the given port' do
-      port = :a
-      class_stub = Class.new
-      class_return_stub = stub()
+    it 'should raise an exception if an invalid type of identifier is given' do
+      expect do
+        subject.add(:a, 123, Class)
+      end.to raise_exception(TypeError, 'Expected identifier to respond to: to_sym')
+    end
 
-      class_stub.should_receive(:new) do
-        class_return_stub
-      end.with(port, an_instance_of(NXT::Interface::Usb)).once()
-
-      subject.add(port, :hello, class_stub)
-
-      subject.send(port).should equal(class_return_stub)
+    it 'should raise an exception if an invalid type of klass is given' do
+      expect do
+        subject.add(:a, :symbol, 'not a class')
+      end.to raise_exception(TypeError, 'Expected klass to be of type Class')
     end
 
     it 'should raise an exception if the port given is already set' do
@@ -142,23 +126,15 @@ describe NXTBrick do
       end.to raise_error(InvalidIdentifierError, "Cannot use identifier #{identifier}, a method on NXTBrick is already using it.")
     end
 
-    it 'should set up the port identifiers correctly' do
-      port = :a
-      identifier = :hello_world
-      class_stub = Class.new
-      class_stub.stub(:new)
-
-      subject.add(port, identifier, class_stub)
-
-      subject.port_identifiers[identifier].should equal(port)
+    it 'should call #define_port_handler_method' do
     end
   end
 
   describe '#remove' do
     it 'should raise an exception if an invalid type of identifier is given' do
       expect do
-        subject.remove('not a symbol')
-      end.to raise_exception(TypeError, 'Expected identifier to be a Symbol')
+        subject.remove(123)
+      end.to raise_exception(TypeError, 'Expected identifier to respond to: to_sym')
     end
 
     it 'should remove any matching identifiers' do
@@ -183,6 +159,33 @@ describe NXTBrick do
 
       return_value = subject.remove(identifier)
       return_value.should be_false
+    end
+  end
+
+  describe '#define_port_handler_method' do
+    it 'should create a new instance of the passed klass and store it in the attribute for the given port' do
+      port = :a
+      class_stub = Class.new
+      class_return_stub = stub()
+
+      class_stub.should_receive(:new) do
+        class_return_stub
+      end.with(port, an_instance_of(NXT::Interface::Usb)).once()
+
+      subject.send(:define_port_handler_method, port, :hello, class_stub)
+
+      subject.send(port).should equal(class_return_stub)
+    end
+
+    it 'should set up the port identifiers correctly' do
+      port = :a
+      identifier = :hello_world
+      class_stub = Class.new
+      class_stub.stub(:new)
+
+      subject.send(:define_port_handler_method, port, identifier, class_stub)
+
+      subject.port_identifiers[identifier].should equal(port)
     end
   end
 end

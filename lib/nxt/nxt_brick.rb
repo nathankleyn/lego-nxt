@@ -20,6 +20,7 @@
 #   nxt.disconnect
 class NXTBrick
   include NXT::Exceptions
+  include NXT::Utils::Assertions
 
   # An enumeration of possible ports, both input and output, that the NXT brick
   # can have connectors attached to.
@@ -90,36 +91,19 @@ class NXTBrick
   #                    be, though it must be able to hook in correctly
   #                    with the NXT library.
   def add(port, identifier, klass)
-    raise TypeError.new('Expected port to be a Symbol') unless port.is_a?(Symbol)
-    raise TypeError.new('Expected identifier to be a Symbol') unless identifier.is_a?(Symbol)
-    raise TypeError.new('Expected klass to be a Class') unless klass.is_a?(Class)
+    assert_in('port', port, PORTS)
+    assert_responds_to('identifier', identifier, :to_sym)
+    assert_type('klass', klass, Class)
 
-    unless PORTS.include?(port)
-      raise TypeError.new("Expected port to be one of: :#{PORTS.join(', :')}")
-    end
-
-    port_variable = :"@#{port}"
-
-    if !self.respond_to?(identifier)
-      # Makes a new instance of the class and pushes it into our instance variable
-      # for the given port.
-      self.instance_variable_set(port_variable, klass.new(port, self.interface))
-
-      # Given that that succeeded, all that remains is to add the identifier
-      # to our lookup Hash. We'll use this Hash later on within method_missing.
-      @port_identifiers[identifier] = port
-
-      # Define a method on the eigenclass of this instance.
-      (class << self; self; end).send(:define_method, identifier) do
-        self.instance_variable_get(port_variable)
-      end
-    else
-      if !self.instance_variable_get(port_variable).nil?
-        raise PortTakenError.new("Port #{port} is already set, call remove first")
-      else
+    if self.respond_to?(identifier)
+      if self.instance_variable_get(:"@#{port}").nil?
         raise InvalidIdentifierError.new("Cannot use identifier #{identifier}, a method on #{self.class} is already using it.")
+      else
+        raise PortTakenError.new("Port #{port} is already set, call remove first")
       end
     end
+
+    define_port_handler_method(port, identifier, klass)
   end
 
   # Remove the assigned (if any) connector instance from the given
@@ -127,8 +111,8 @@ class NXTBrick
   #
   # @param Symbol identifier The identifier to search for and remove.
   def remove(identifier)
-    raise TypeError.new('Expected identifier to be a Symbol') unless identifier.is_a?(Symbol)
-    !!@port_identifiers.delete(identifier)
+    assert_responds_to('identifier', identifier, :to_sym)
+    !!@port_identifiers.delete(identifier.to_sym)
   end
 
   # This will dynamically add methods like:
@@ -148,6 +132,25 @@ class NXTBrick
       define_method("add_#{const.to_s.underscore}_#{type_const.to_s.underscore}") do |port, identifier|
         self.add(port, identifier, NXT::Connector.const_get(type_const).const_get(const))
       end
+    end
+  end
+
+  private
+
+  def define_port_handler_method(port, identifier, klass)
+    port_variable = :"@#{port}"
+
+    # Makes a new instance of the class and pushes it into our instance variable
+    # for the given port.
+    self.instance_variable_set(port_variable, klass.new(port, self.interface))
+
+    # Given that that succeeded, all that remains is to add the identifier
+    # to our lookup Hash. We'll use this Hash later on within method_missing.
+    @port_identifiers[identifier.to_sym] = port
+
+    # Define a method on the eigenclass of this instance.
+    (class << self; self; end).send(:define_method, identifier.to_sym) do
+      self.instance_variable_get(port_variable)
     end
   end
 end

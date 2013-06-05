@@ -3,5 +3,6 @@
 /bin
 /coverage
 /doc
+/tmp
 /.bundle
 /.yardoc
