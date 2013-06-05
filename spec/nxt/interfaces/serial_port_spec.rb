@@ -12,9 +12,21 @@ describe NXT::Interface::SerialPort do
   describe 'constants' do
     it 'should have a BAUD_RATE constant' do
       should have_constant(:BAUD_RATE)
+    end
+
+    it 'should have a DATA_BITS constant' do
       should have_constant(:DATA_BITS)
+    end
+
+    it 'should have a STOP_BITS constant' do
       should have_constant(:STOP_BITS)
+    end
+
+    it 'should have a PARITY constant' do
       should have_constant(:PARITY)
+    end
+
+    it 'should have a READ_TIMEOUT constant' do
       should have_constant(:READ_TIMEOUT)
     end
   end
@@ -59,6 +71,27 @@ describe NXT::Interface::SerialPort do
       ::SerialPort.should_receive(:new).and_return(serial_port_stub)
 
       subject.connect
+    end
+  end
+
+  describe '#disconnect' do
+    before do
+      @connection = Object.new
+      subject.instance_variable_set(:@connection, @connection)
+    end
+
+    it 'should close the connection if connected' do
+      subject.stub(:connected?).and_return(true)
+      @connection.should_receive(:close)
+
+      subject.disconnect
+    end
+
+    it 'should not close the connection if already disconnected' do
+      subject.stub(:connected?).and_return(false)
+      @connection.should_not_receive(:close)
+
+      subject.disconnect
     end
   end
 

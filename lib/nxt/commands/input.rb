@@ -1,5 +1,3 @@
-require 'nxt/utils/accessors'
-
 module NXT
   module Command
     # An implementation of all the input related NXT commands:

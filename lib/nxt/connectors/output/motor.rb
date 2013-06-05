@@ -3,6 +3,7 @@ module NXT
     module Output
       class Motor
         include NXT::Command::Output
+        include NXT::Utils::Assertions
         extend NXT::Utils::Accessors
 
         DURATION_TYPE = [:seconds, :degrees, :rotations].freeze
@@ -29,11 +30,7 @@ module NXT
 
           if options.include?(:type)
             type = options[:type]
-
-            unless DURATION_TYPE.include?(type)
-              raise TypeError.new("Expected duration type to be one of: :#{DURATION_TYPE.join(', :')}")
-            end
-
+            assert_in(:type, type, DURATION_TYPE)
             @duration_type = type
           else
             @duration_type = :seconds
@@ -42,11 +39,7 @@ module NXT
           if options.include?(:after)
             if @duration_type == :seconds
               after = options[:after]
-
-              unless DURATION_AFTER.include?(after)
-                raise TypeError.new("Expected after option to be one of: :#{DURATION_AFTER.join(', :')}")
-              end
-
+              assert_in(:after, after, DURATION_AFTER)
               @duration_after = after
             else
               raise TypeError.new('The after option is only available when the unit duration is in seconds.')
