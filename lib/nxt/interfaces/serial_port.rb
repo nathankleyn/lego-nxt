@@ -69,7 +69,7 @@ module NXT
         #
         # Reference: Appendix 1, Page 22
         length = @connection.sysread(2)
-        @connection.sysread(length.unpack('v')[0])
+        @connection.sysread(length.unpack('v')[0]).from_hex_str
       end
     end
   end

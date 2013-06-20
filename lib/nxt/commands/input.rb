@@ -15,7 +15,10 @@ module NXT
       COMMAND_IDENTIFIER = {
         set_input_mode: 0x05,
         get_input_values: 0x07,
-        reset_input_scaled_value: 0x08
+        reset_input_scaled_value: 0x08,
+        ls_get_status: 0x0E,
+        ls_write: 0x0F,
+        ls_read: 0x10
       }.freeze
 
       # The sensor type enum. This is a list of possible values when setting the
@@ -67,7 +70,6 @@ module NXT
 
       def set_input_mode(response_required = false)
         send_and_receive(COMMAND_IDENTIFIER[:set_input_mode], [
-          self.power,
           SENSOR_TYPE[self.sensor_type],
           SENSOR_MODE[self.sensor_mode]
         ], response_required)
@@ -81,6 +83,18 @@ module NXT
       def reset_input_scaled_value
         # TODO: Parse this response and return hash or something similar.
         send_and_receive(COMMAND_IDENTIFIER[:reset_input_scaled_value])
+      end
+
+      def ls_get_status(response_required = false)
+        send_and_receive(COMMAND_IDENTIFIER[:ls_get_status])
+      end
+
+      def ls_write(bytes, response_required = false)
+        send_and_receive(COMMAND_IDENTIFIER[:ls_write], bytes)
+      end
+
+      def ls_read(response_required = false)
+        send_and_receive(COMMAND_IDENTIFIER[:ls_read])
       end
     end
   end

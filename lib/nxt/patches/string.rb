@@ -17,13 +17,6 @@ class String
   end
 
   def from_hex_str
-    data = self.split(' ')
-    str = ''
-
-    data.each do |h|
-      str += '%c' % h
-    end
-
-    str
+    self.unpack('C*')
   end
 end

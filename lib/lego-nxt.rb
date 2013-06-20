@@ -3,6 +3,7 @@ $:.unshift(File.dirname(__FILE__))
 require 'active_support/inflector'
 
 require 'nxt/patches/module'
+require 'nxt/patches/string'
 
 require 'nxt/exceptions'
 
@@ -13,8 +14,11 @@ require 'nxt/interfaces/base'
 require 'nxt/interfaces/usb'
 require 'nxt/interfaces/serial_port'
 
+require 'nxt/protocols/i2c'
+
 require 'nxt/commands/base'
 require 'nxt/commands/input'
+require 'nxt/commands/low_speed'
 require 'nxt/commands/output'
 require 'nxt/commands/program'
 require 'nxt/commands/sound'

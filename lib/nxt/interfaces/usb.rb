@@ -44,7 +44,7 @@ module NXT
       end
 
       def receive
-        @connection.bulk_transfer(endpoint: IN_ENDPOINT, dataIn: READSIZE, timeout: TIMEOUT)
+        @connection.bulk_transfer(endpoint: IN_ENDPOINT, dataIn: READSIZE, timeout: TIMEOUT).from_hex_str
       end
     end
   end
