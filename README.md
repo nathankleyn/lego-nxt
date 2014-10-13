@@ -1,5 +1,7 @@
 # Lego NXT [![Gem Version](https://badge.fury.io/rb/lego-nxt.png)](http://badge.fury.io/rb/lego-nxt) [![Build Status](https://travis-ci.org/nathankleyn/lego-nxt.png)](https://travis-ci.org/nathankleyn/lego-nxt) [![Code Climate](https://codeclimate.com/github/nathankleyn/lego-nxt.png)](https://codeclimate.com/github/nathankleyn/lego-nxt) [![Coverage Status](https://coveralls.io/repos/nathankleyn/lego-nxt/badge.png)](https://coveralls.io/r/nathankleyn/lego-nxt) [![Dependency Status](https://gemnasium.com/nathankleyn/lego-nxt.png)](https://gemnasium.com/nathankleyn/lego-nxt)
 
+> **This gem is under heavy development!** A lot of the below code may not work, and is certainly not guranteed to be reliable if it does! If you need to base a working project on this, I recommend [going back to the `ruby-next` gem this work is inspired by](https://github.com/zuk/ruby-nxt) for the time being.
+
 Control a Lego NXT 2.0 brick using Ruby code. This library works by piping commands over a Bluetooth or USB connection to the brick, allowing you to write Ruby scripts to control your NXT brick.
 
 This project used to be based on "ruby-nxt", and Tony Buser's subsequent rewrite "nxt". It is now a complete rewrite, based heavily in some parts on the aforesaid projects internally, but with a brand new external API that should prove cleaner and easier to work with.
