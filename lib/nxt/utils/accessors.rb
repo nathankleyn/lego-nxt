@@ -1,5 +1,7 @@
 module NXT
   module Utils
+    # Utilities related to creating accessors that have some conditonal guards
+    # when setting values.
     module Accessors
       include NXT::Utils::Assertions
 

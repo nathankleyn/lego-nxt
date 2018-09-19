@@ -55,7 +55,7 @@ module NXT
         fahrenheit: 0xC0,
         angle_steps: 0xE0,
         slope: 0x1F,
-        mode_mask: 0XE0
+        mode_mask: 0x00
       }.freeze
 
       attr_combined_accessor :sensor_type, :no_sensor
@@ -68,33 +68,37 @@ module NXT
         COMMAND_TYPES[:direct]
       end
 
-      def set_input_mode(response_required = false)
-        send_and_receive(COMMAND_IDENTIFIER[:set_input_mode], [
-          SENSOR_TYPE[self.sensor_type],
-          SENSOR_MODE[self.sensor_mode]
-        ], response_required)
+      def update_input_mode(response_required = false)
+        send_and_receive(
+          COMMAND_IDENTIFIER[:set_input_mode],
+          [
+            SENSOR_TYPE[sensor_type],
+            SENSOR_MODE[sensor_mode]
+          ],
+          response_required
+        )
       end
 
-      def get_input_values
+      def input_values
         # TODO: Parse this response and return hash or something similar.
-        send_and_receive(COMMAND_IDENTIFIER[:get_input_values])
+        send_and_receive(COMMAND_IDENTIFIER[:get_input_values], [], response_required)
       end
 
       def reset_input_scaled_value
         # TODO: Parse this response and return hash or something similar.
-        send_and_receive(COMMAND_IDENTIFIER[:reset_input_scaled_value])
+        send_and_receive(COMMAND_IDENTIFIER[:reset_input_scaled_value], [], response_required)
       end
 
       def ls_get_status(response_required = false)
-        send_and_receive(COMMAND_IDENTIFIER[:ls_get_status])
+        send_and_receive(COMMAND_IDENTIFIER[:ls_get_status], [], response_required)
       end
 
       def ls_write(bytes, response_required = false)
-        send_and_receive(COMMAND_IDENTIFIER[:ls_write], bytes)
+        send_and_receive(COMMAND_IDENTIFIER[:ls_write], bytes, response_required)
       end
 
       def ls_read(response_required = false)
-        send_and_receive(COMMAND_IDENTIFIER[:ls_read])
+        send_and_receive(COMMAND_IDENTIFIER[:ls_read], [], response_required)
       end
     end
   end

@@ -24,7 +24,7 @@ class NXTBrick
 
   # An enumeration of possible ports, both input and output, that the NXT brick
   # can have connectors attached to.
-  PORTS = [:a, :b, :c, :one, :two, :three, :four]
+  PORTS = %i[a b c one two three four].freeze
 
   # Get the instance of the interface that this runner class is using to connect
   # to the NXT brick.
@@ -48,18 +48,18 @@ class NXTBrick
     interface_type = interface_type.to_s.classify
 
     unless NXT::Interface.constants.include?(interface_type.to_sym)
-      raise InvalidInterfaceError.new("There is no interface of type #{interface_type}.")
+      raise(InvalidInterfaceError, "There is no interface of type #{interface_type}.")
     end
 
     @interface = NXT::Interface.const_get(interface_type).new(*interface_args)
 
-    if block_given?
-      begin
-        connect
-        yield(self)
-      ensure
-        disconnect
-      end
+    return unless block_given?
+
+    begin
+      connect
+      yield(self)
+    ensure
+      disconnect
     end
   end
 
@@ -95,10 +95,13 @@ class NXTBrick
 
     if respond_to?(identifier)
       if instance_variable_get(:"@#{port}").nil?
-        raise InvalidIdentifierError.new("Cannot use identifier #{identifier}, a method on #{self.class} is already using it.")
-      else
-        raise PortTakenError.new("Port #{port} is already set, call remove first")
+        raise(
+          InvalidIdentifierError,
+          "Cannot use identifier #{identifier}, a method on #{self.class} is already using it."
+        )
       end
+
+      raise(PortTakenError, "Port #{port} is already set, call remove first")
     end
 
     define_port_handler_method(port, identifier, klass)
@@ -110,7 +113,7 @@ class NXTBrick
   # @param Symbol identifier The identifier to search for and remove.
   def remove(identifier)
     assert_responds_to('identifier', identifier, :to_sym)
-    !!@port_identifiers.delete(identifier.to_sym)
+    !@port_identifiers.delete(identifier.to_sym).nil?
   end
 
   # This will dynamically add methods like:

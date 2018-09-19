@@ -23,16 +23,22 @@ module NXT
         COMMAND_TYPES[:direct]
       end
 
+      def ls_clear_buffer
+        ls_read
+      rescue StandardError
+        nil
+      end
+
       def ls_get_status(response_required = false)
-        send_and_receive(COMMAND_IDENTIFIER[:ls_get_status])
+        send_and_receive(COMMAND_IDENTIFIER[:ls_get_status], [], response_required)
       end
 
       def ls_write(response_required = false)
-        send_and_receive(COMMAND_IDENTIFIER[:ls_write])
+        send_and_receive(COMMAND_IDENTIFIER[:ls_write], [], response_required)
       end
 
       def ls_read(response_required = false)
-        send_and_receive(COMMAND_IDENTIFIER[:ls_read])
+        send_and_receive(COMMAND_IDENTIFIER[:ls_read], [], response_required)
       end
     end
   end

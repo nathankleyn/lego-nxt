@@ -2,43 +2,42 @@ require 'serialport'
 
 module NXT
   module Interface
+    # Implements serial port connectivity to the NXT 2.0 module.
     class SerialPort < Base
       include NXT::Exceptions
 
       attr_reader :dev
 
-      BAUD_RATE = 57600
+      BAUD_RATE = 57_600
       DATA_BITS = 8
       STOP_BITS = 1
       PARITY = ::SerialPort::NONE
-      READ_TIMEOUT = 5000
+      READ_TIMEOUT = 5_000
 
       def initialize(dev)
-        self.dev = (dev)
+        self.dev = dev
       end
 
       def dev=(dev)
-        raise InvalidDeviceError unless File.exists?(dev)
+        raise InvalidDeviceError unless File.exist?(dev)
         @dev = dev
       end
 
       def connect
         @connection = ::SerialPort.new(@dev, BAUD_RATE, DATA_BITS, STOP_BITS, PARITY)
 
-        if @connection.nil?
-          raise SerialPortConnectionError.new("Could not establish a SerialPort connection to #{dev}")
-        end
+        raise SerialPortConnectionError, "Could not establish a SerialPort connection to #{dev}" if @connection.nil?
 
         @connection.flow_control = ::SerialPort::HARD
         @connection.read_timeout = READ_TIMEOUT
 
         @connection
       rescue ArgumentError
-        raise SerialPortConnectionError.new("The #{dev} device is not a valid SerialPort")
+        raise SerialPortConnectionError, "The #{dev} device is not a valid SerialPort"
       end
 
       def disconnect
-        @connection.close if self.connected?
+        @connection.close if connected?
       end
 
       def connected?

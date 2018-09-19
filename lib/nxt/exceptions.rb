@@ -2,7 +2,7 @@ module NXT
   module Exceptions
     # Raised when a class has not implemented a method from the base class
     # that is required to be overriden.
-    class InterfaceNotImplemented < NotImplementedError; end
+    class InterfaceNotImplemented < RuntimeError; end
 
     # Raised when an invalid interface is attempted to be constructed.
     class InvalidInterfaceError < TypeError; end

@@ -18,18 +18,12 @@ desc 'NXT related tasks'
 namespace :nxt do
   desc 'Detect a connected NXT brick within /dev.'
   task :detect do
-    unless $DEV ||= ENV['NXT'] || ENV['DEV']
-      begin
-        devices = Dir['/dev/*NXT*']
-        if devices.size > 0
-          $DEV = devices[0]
-          puts "Detected a NXT brick at '#{$DEV}'."
-        else
-          puts 'Could not detect any connected NXT bricks.'
-        end
-      rescue
-        # FIXME: The /dev directory isn't there, possibly running on Windows.
-      end
+    unless ENV['NXT'] || ENV['DEV']
+      raise "/dev not fount, please ensure you're using a *nix system." unless Dir.exist?('/dev')
+
+      devices = Dir['/dev/*NXT*']
+      raise 'Could not detect any connected NXT bricks.' if devices.empty?
+      puts "Detected a NXT brick at '#{devices.first}'."
     end
   end
 end

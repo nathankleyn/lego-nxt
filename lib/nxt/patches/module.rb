@@ -1,3 +1,4 @@
+# Some patches that extend the default Ruby Module with some useful methods.
 class Module
   # Creates an invariant accessor that allows getting and setting from the same
   # endpoint. It will operate in getter mode if you don't pass any arguments
@@ -8,10 +9,10 @@ class Module
     define_method(sym) do |*args|
       if args.empty?
         instance_var = :"@#{sym}"
-        if (value = self.instance_variable_get(instance_var))
+        if (value = instance_variable_get(instance_var))
           value
         else
-          self.instance_variable_set(instance_var, default)
+          instance_variable_set(instance_var, default)
           default
         end
       else

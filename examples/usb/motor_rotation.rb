@@ -10,10 +10,11 @@ NXTBrick.new(:usb) do |nxt|
   # Run the motor for 5 rotations instead.
   nxt.front_motor.duration(5, type: :rotations).move
 
-  begin
+  loop do
     puts 'Waiting...'
     sleep 0.5
-  end while !nxt.front_motor.stopped?
+    break if nxt.front_motor.stopped?
+  end
 
   puts 'I am like, done rotationing dude.'
 end

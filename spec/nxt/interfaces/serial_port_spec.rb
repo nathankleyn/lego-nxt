@@ -40,7 +40,7 @@ describe NXT::Interface::SerialPort do
 
   describe '#initialize' do
     it 'should set the device to the incomming argument' do
-      subject.dev.should equal(@device)
+      expect(subject.dev).to equal(@device)
     end
 
     it 'should raise an exception when trying to connect to invalid dev files' do
@@ -58,17 +58,17 @@ describe NXT::Interface::SerialPort do
     end
 
     it 'should raise an exception when the SerialPort connection is nil' do
-      ::SerialPort.should_receive(:new).and_return(nil)
+      allow(::SerialPort).to receive(:new).and_return(nil)
       expect do
         subject.connect
       end.to raise_exception(SerialPortConnectionError, "Could not establish a SerialPort connection to #{@device}")
     end
 
     it 'should set the flow control and read timeout when the connection is established' do
-      serial_port_stub = stub()
-      serial_port_stub.should_receive(:flow_control=).with(::SerialPort::HARD).once
-      serial_port_stub.should_receive(:read_timeout=).with(subject.class::READ_TIMEOUT).once
-      ::SerialPort.should_receive(:new).and_return(serial_port_stub)
+      serial_port_stub = double
+      allow(serial_port_stub).to receive(:flow_control=).with(::SerialPort::HARD).once
+      allow(serial_port_stub).to receive(:read_timeout=).with(subject.class::READ_TIMEOUT).once
+      allow(::SerialPort).to receive(:new).and_return(serial_port_stub)
 
       subject.connect
     end
@@ -81,25 +81,25 @@ describe NXT::Interface::SerialPort do
     end
 
     it 'should close the connection if connected' do
-      subject.stub(:connected?).and_return(true)
-      @connection.should_receive(:close)
+      expect(subject).to receive(:connected?).and_return(true)
+      expect(@connection).to receive(:close)
 
       subject.disconnect
     end
 
     it 'should not close the connection if already disconnected' do
-      subject.stub(:connected?).and_return(false)
-      @connection.should_not_receive(:close)
+      expect(subject).to receive(:connected?).and_return(false)
+      expect(@connection).to_not receive(:close)
 
       subject.disconnect
     end
   end
 
-  describe '#send' do
+  # describe '#send' do
 
-  end
+  # end
 
-  describe '#receive' do
+  # describe '#receive' do
 
-  end
+  # end
 end

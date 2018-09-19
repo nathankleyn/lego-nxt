@@ -38,11 +38,11 @@ describe NXT::Connector::Output::Motor do
 
   describe '#initialize' do
     it 'should set the port to the incomming argument' do
-      subject.port.should equal(@port)
+      expect(subject.port).to equal(@port)
     end
 
     it 'should set the interface to the incomming argument' do
-      subject.interface.should equal(@interface)
+      expect(subject.interface).to equal(@interface)
     end
   end
 end

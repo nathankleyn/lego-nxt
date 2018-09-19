@@ -1,5 +1,12 @@
 module NXT
   module Command
+    # The base implementation of all commands, providing low-level details that
+    # are consistent across all supported types. These are things such as:
+    #
+    # * Errors.
+    # * Sending and receiving of responses.
+    # * Addressing the port safely.
+    # * Command types.
     module Base
       private
 
@@ -40,33 +47,35 @@ module NXT
         'Bad arguments' => 0xFF
       }.invert.freeze
 
+      def port_as_byte(port)
+        PORTS[port]
+      end
+
       def send_and_receive(command_identifier, payload = [], response_required = true)
-        unless response_required
-          command_identifier |= 0x80
-        end
+        send(command_identifier, payload, response_required)
+        # We bail unless we need to wait for response.
+        return unless response_required
+        receive
+      end
+
+      def send(command_identifier, payload = [], response_required = true)
+        command_identifier |= 0x80 unless response_required
 
         @interface.send([
           command_type,
           command_identifier,
-          port_as_byte(self.port)
+          port_as_byte(port)
         ] + payload)
-
-        if response_required
-          response = @interface.receive
-
-          puts response.inspect
-          puts command_identifier.inspect
-
-          raise 'Not a valid response package.' unless response[0] == 0x02
-          raise 'Not a valid response to the command that was sent.' unless response[1] == command_identifier
-          raise ERRORS[response[2]] unless response[2] == 0x00
-
-          response[3..-1]
-        end
       end
 
-      def port_as_byte(port)
-        PORTS[port]
+      def receive
+        response = @interface.receive
+
+        raise 'Not a valid response package.' unless response[0] == 0x02
+        raise 'Not a valid response to the command that was sent.' unless response[1] == command_identifier
+        raise ERRORS[response[2]] unless response[2].zero?
+
+        response[3..-1]
       end
     end
   end

@@ -1,6 +1,7 @@
 module NXT
   module Connector
     module Input
+      # Implements the "ultrasonic" sensor for the NXT 2.0 module.
       class Ultrasonic
         include NXT::Command::Input
         include NXT::Command::LowSpeed
@@ -8,9 +9,9 @@ module NXT
         extend NXT::Utils::Accessors
 
         # Exception thrown by distance! when the sensor cannot determine the distance.
-        class UnmeasurableDistance < Exception; end
+        class UnmeasurableDistance < RuntimeError; end
 
-        UNIT = [:centimeters, :inchess].freeze
+        UNIT = %i[centimeters inches].freeze
 
         attr_accessor :port, :interface
 
@@ -26,15 +27,13 @@ module NXT
         def distance
           ls_write(NXT::Protocols::I2C.read_measurement_byte_0)
 
-          binding.pry
-
           while ls_get_status < 1
             sleep(0.1)
             # TODO: implement timeout so we don't get stuck if the expected data never comes
           end
 
           distance = ls_read[0]
-    
+
           if @unit == :centimeters
             distance.to_i
           else
@@ -45,20 +44,15 @@ module NXT
         def distance!
           d = distance
           raise UnmeasurableDistance if d == 255
-          return d
+          d
         end
-        
+
         def start
           sensor_type(:lowspeed_9v)
           sensor_mode(:raw)
 
-          set_input_mode
-
-          # clear buffer
-          begin
-            ls_read
-          rescue
-          end
+          update_input_mode
+          ls_clear_buffer
 
           # set sensor to continuously send pings
           ls_write(NXT::Protocols::I2C.continuous_measurement_command)

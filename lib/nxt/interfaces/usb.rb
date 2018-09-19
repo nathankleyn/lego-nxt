@@ -2,6 +2,7 @@ require 'libusb'
 
 module NXT
   module Interface
+    # Implements USB connectivity to the NXT 2.0 module.
     class Usb < Base
       include NXT::Exceptions
 
@@ -9,7 +10,7 @@ module NXT
       ID_PRODUCT_NXT = 0x0002
       OUT_ENDPOINT = 0x01
       IN_ENDPOINT = 0x82
-      TIMEOUT = 10000
+      TIMEOUT = 10_000
       READSIZE = 64
       INTERFACE = 0
 
@@ -17,9 +18,7 @@ module NXT
         @usb_context = LIBUSB::Context.new
         @dev = @usb_context.devices(idVendor: ID_VENDOR_LEGO, idProduct: ID_PRODUCT_NXT).first
 
-        if @dev.nil?
-          raise UsbConnectionError.new("Could not find NXT attached as USB device")
-        end
+        raise UsbConnectionError, 'Could not find NXT attached as USB device' if @dev.nil?
 
         @connection = @dev.open
         @connection.claim_interface(INTERFACE)
@@ -28,10 +27,9 @@ module NXT
       end
 
       def disconnect
-        if self.connected?
-          @connection.release_interface(INTERFACE)
-          @connection.close
-        end
+        return unless connected?
+        @connection.release_interface(INTERFACE)
+        @connection.close
       end
 
       def connected?

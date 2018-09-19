@@ -1,5 +1,9 @@
 module NXT
   module Protocols
+    # Communication to the NXT brick for digital sensors is done using the I2C
+    # protocol. This module implements communication in that fashion,
+    # abstracing the messages
+    # we wish to send from the underlying protocol for ease-of-use.
     module I2C
       COMMAND_IDENTIFIER = {
         ls_get_status: 0x0E,
@@ -38,7 +42,7 @@ module NXT
       }.freeze
 
       # Format is I2C address, followed by the command. If the array is only
-      # one member large, then the second byte is instead a value passed at 
+      # one member large, then the second byte is instead a value passed at
       # run-time, eg. the length of the interval to run the continuous
       # measuring on the ultrasonic sensor for.
       I2C_COMMANDS = {
@@ -54,17 +58,44 @@ module NXT
       }.freeze
 
       def self.method_missing(name, *args)
-        data = []
+        if I2C_CONSTANT_OPS.key?(name)
+          run_constant_op(name)
+        elsif I2C_VARIABLE_OPS.key?(name)
+          run_variable_op(name)
+        elsif I2C_COMMANDS.key?(name)
+          run_command(name, *args)
+        else
+          super
+        end
+      end
 
-        if I2C_CONSTANT_OPS.has_key?(name)
+      def self.respond_to_missing?(name, include_private = false)
+        I2C_CONSTANT_OPS.key?(name) ||
+          I2C_VARIABLE_OPS.key?(name) ||
+          I2C_COMMANDS.key?(name) ||
+          super
+      end
+
+      class << self
+        private
+
+        def run_constant_op(name)
           op = I2C_CONSTANT_OPS[name]
           addr = op[0]
           rx_len = op[1]
-        elsif I2C_VARIABLE_OPS.has_key?(name)
+
+          [0, rx_len, I2C_HEADER, addr]
+        end
+
+        def run_variable_op(name)
           op = I2C_VARIABLE_OPS[name]
           addr = op
           rx_len = 1
-        elsif I2C_COMMANDS.has_key?(name)
+
+          [0, rx_len, I2C_HEADER, addr]
+        end
+
+        def run_command(name, *args)
           op = I2C_COMMANDS[name]
           addr = op[0]
           rx_len = 0
@@ -76,11 +107,9 @@ module NXT
           else
             raise "Missing argument for command #{name}"
           end
-        else
-          raise "Unknown ultrasonic sensor command: #{name}"
-        end
 
-        [data.size, rx_len, I2C_HEADER, addr] + data
+          [data.size, rx_len, I2C_HEADER, addr] + data
+        end
       end
     end
   end

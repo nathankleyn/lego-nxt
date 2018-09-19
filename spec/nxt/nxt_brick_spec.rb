@@ -60,20 +60,20 @@ describe NXTBrick do
     end
 
     it 'should set the interface to the incomming argument' do
-      subject.interface.should be_an_instance_of(NXT::Interface::Usb)
+      expect(subject.interface).to be_an_instance_of(NXT::Interface::Usb)
     end
 
     it 'should call yield if given a block, passing self' do
       block_called = false
 
-      NXT::Interface::Usb.any_instance.stub(:connect)
+      allow_any_instance_of(NXT::Interface::Usb).to receive(:connect)
 
       NXTBrick.new(:usb) do |nxt|
         block_called = true
-        nxt.should be_an_instance_of(NXTBrick)
+        expect(nxt).to be_an_instance_of(NXTBrick)
       end
 
-      block_called.should be_true
+      expect(block_called).to be true
     end
   end
 
@@ -84,7 +84,7 @@ describe NXTBrick do
     end
 
     it 'should call connect on the interface' do
-      @interface.should_receive(:connect)
+      expect(@interface).to receive(:connect)
       subject.connect
     end
   end
@@ -96,7 +96,7 @@ describe NXTBrick do
     end
 
     it 'should call disconnect on the interface' do
-      @interface.should_receive(:disconnect)
+      expect(@interface).to receive(:disconnect)
       subject.disconnect
     end
   end
@@ -106,9 +106,8 @@ describe NXTBrick do
       @port = :a
       @identifier = :hello
       @class_stub = Class.new
-      @class_stub.stub(:new)
 
-      subject.stub(:define_port_handler_method)
+      allow(subject).to receive(:define_port_handler_method)
     end
 
     it 'should raise an exception if an invalid port number or letter is given' do
@@ -129,16 +128,19 @@ describe NXTBrick do
       end.to raise_exception(TypeError, 'Expected klass to be of type Class')
     end
 
-    it 'should raise an exception if trying to use an identifier that is the name of a defined methodz' do
-      subject.stub(@identifier)
+    it 'should raise an exception if trying to use an identifier that is the name of a defined method' do
+      allow(subject).to receive(@identifier)
 
       expect do
         subject.add(@port, @identifier, @class_stub)
-      end.to raise_error(InvalidIdentifierError, "Cannot use identifier #{@identifier}, a method on NXTBrick is already using it.")
+      end.to raise_error(
+        InvalidIdentifierError,
+        "Cannot use identifier #{@identifier}, a method on NXTBrick is already using it."
+      )
     end
 
     it 'should raise an exception if the port given is already set' do
-      subject.stub(@identifier)
+      allow(subject).to receive(@identifier)
       subject.instance_variable_set(:"@#{@port}", 'some value already there')
 
       expect do
@@ -147,7 +149,7 @@ describe NXTBrick do
     end
 
     it 'should call #define_port_handler_method' do
-      subject.should_receive(:define_port_handler_method).with(@port, @identifier, @class_stub)
+      expect(subject).to receive(:define_port_handler_method).with(@port, @identifier, @class_stub)
       subject.add(@port, @identifier, @class_stub)
     end
   end
@@ -164,7 +166,7 @@ describe NXTBrick do
       port_identifiers = {}
       subject.instance_variable_set(:@port_identifiers, port_identifiers)
 
-      port_identifiers.should_receive(:delete).with(identifier).once()
+      expect(port_identifiers).to receive(:delete).with(identifier).once
       subject.remove(identifier)
     end
 
@@ -175,12 +177,12 @@ describe NXTBrick do
       subject.instance_variable_set(:@port_identifiers, port_identifiers)
 
       return_value = subject.remove(identifier)
-      return_value.should be_true
+      expect(return_value).to be true
 
-      port_identifiers.should_not include(identifier)
+      expect(port_identifiers).to_not include(identifier)
 
       return_value = subject.remove(identifier)
-      return_value.should be_false
+      expect(return_value).to be false
     end
   end
 
@@ -189,23 +191,23 @@ describe NXTBrick do
       @port = :a
       @identifier = :hello
       @class_stub = Class.new
-      @class_stub.stub(:new)
+      allow(@class_stub).to receive(:new)
     end
 
     it 'should create a new instance of the passed klass and store it in the attribute for the given port' do
-      class_return_stub = stub()
-      @class_stub.should_receive(:new) do
+      class_return_stub = double
+      expect(@class_stub).to receive(:new) do
         class_return_stub
-      end.with(@port, an_instance_of(NXT::Interface::Usb)).once()
+      end.with(@port, an_instance_of(NXT::Interface::Usb)).once
 
       subject.send(:define_port_handler_method, @port, @identifier, @class_stub)
 
-      subject.send(@port).should equal(class_return_stub)
+      expect(subject.send(@port)).to equal(class_return_stub)
     end
 
     it 'should set up the port identifiers correctly' do
       subject.send(:define_port_handler_method, @port, @identifier, @class_stub)
-      subject.port_identifiers[@identifier].should equal(@port)
+      expect(subject.port_identifiers[@identifier]).to equal(@port)
     end
   end
 end

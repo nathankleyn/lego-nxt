@@ -85,23 +85,23 @@ module NXT
         COMMAND_TYPES[:direct]
       end
 
-      def set_output_state(response_required = false)
+      def update_output_state(response_required = false)
         # Pack this value into a 32-bit unsigned little-endian binary string,
         # then unpack it into 4 8 bit unsigned integer chunks. We are
         # converting the passed in value to a little endian, unsigned long
         # value.
-        tacho_limit_as_bytes = [self.tacho_limit].pack('V').unpack('C4')
+        tacho_limit_as_bytes = [tacho_limit].pack('V').unpack('C4')
 
         send_and_receive(COMMAND_IDENTIFIER[:set_output_state], [
-          self.power,
-          MODE[self.mode],
-          REGULATION_MODE[self.regulation_mode],
+          power,
+          MODE[mode],
+          REGULATION_MODE[regulation_mode],
           0, # turn ratio
-          RUN_STATE[self.run_state]
+          RUN_STATE[run_state]
         ] + tacho_limit_as_bytes, response_required)
       end
 
-      def get_output_state
+      def output_state
         # TODO: Parse this response and return hash or something similar.
         send_and_receive(COMMAND_IDENTIFIER[:get_output_state])
       end
