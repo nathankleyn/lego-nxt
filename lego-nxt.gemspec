@@ -11,7 +11,7 @@ Gem::Specification.new do |gem|
   gem.files = %w[README.md Rakefile] + Dir.glob('{lib,spec}/**/*')
   gem.require_path = 'lib'
 
-  gem.add_dependency 'activesupport', '~>5.2.1'
+  gem.add_dependency 'activesupport', '>=5.2.1', '<6.1.0'
   gem.add_dependency 'libusb', '~>0.6.4'
   gem.add_dependency 'serialport', '~>1.3.1'
   gem.add_development_dependency 'coveralls', '~> 0.8.22'
