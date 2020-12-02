@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Some patches that extend the default Ruby Module with some useful methods.
 class Module
   # Creates an invariant accessor that allows getting and setting from the same

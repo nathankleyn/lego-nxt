@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Command
     # An implementation of all the input related NXT commands:
@@ -68,7 +70,7 @@ module NXT
         COMMAND_TYPES[:direct]
       end
 
-      def update_input_mode(response_required = false)
+      def update_input_mode(response_required: false)
         send_and_receive(
           COMMAND_IDENTIFIER[:set_input_mode],
           [
@@ -89,15 +91,15 @@ module NXT
         send_and_receive(COMMAND_IDENTIFIER[:reset_input_scaled_value], [], response_required)
       end
 
-      def ls_get_status(response_required = false)
+      def ls_get_status(response_required: false)
         send_and_receive(COMMAND_IDENTIFIER[:ls_get_status], [], response_required)
       end
 
-      def ls_write(bytes, response_required = false)
+      def ls_write(bytes, response_required: false)
         send_and_receive(COMMAND_IDENTIFIER[:ls_write], bytes, response_required)
       end
 
-      def ls_read(response_required = false)
+      def ls_read(response_required: false)
         send_and_receive(COMMAND_IDENTIFIER[:ls_read], [], response_required)
       end
     end

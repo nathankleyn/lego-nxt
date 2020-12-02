@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'libusb'
 
 module NXT
@@ -28,6 +30,7 @@ module NXT
 
       def disconnect
         return unless connected?
+
         @connection.release_interface(INTERFACE)
         @connection.close
       end

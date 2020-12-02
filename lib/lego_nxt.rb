@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'active_support/inflector'
@@ -10,9 +12,9 @@ require 'nxt/exceptions'
 require 'nxt/utils/assertions'
 require 'nxt/utils/accessors'
 
-require 'nxt/interfaces/base'
-require 'nxt/interfaces/usb'
-require 'nxt/interfaces/serial_port'
+require 'nxt/interface/base'
+require 'nxt/interface/usb'
+require 'nxt/interface/serial_port'
 
 require 'nxt/protocols/i2c'
 
@@ -24,11 +26,11 @@ require 'nxt/commands/program'
 require 'nxt/commands/sound'
 require 'nxt/commands/tone'
 
-require 'nxt/connectors/input/base'
-require 'nxt/connectors/input/color'
-require 'nxt/connectors/input/touch'
-require 'nxt/connectors/input/ultrasonic'
-require 'nxt/connectors/output/base'
-require 'nxt/connectors/output/motor'
+require 'nxt/connector/input/base'
+require 'nxt/connector/input/color'
+require 'nxt/connector/input/touch'
+require 'nxt/connector/input/ultrasonic'
+require 'nxt/connector/output/base'
+require 'nxt/connector/output/motor'
 
 require 'nxt/nxt_brick'

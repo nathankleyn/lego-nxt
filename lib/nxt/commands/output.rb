@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'nxt/utils/accessors'
 
 module NXT
@@ -85,7 +87,7 @@ module NXT
         COMMAND_TYPES[:direct]
       end
 
-      def update_output_state(response_required = false)
+      def update_output_state(response_required: false)
         # Pack this value into a 32-bit unsigned little-endian binary string,
         # then unpack it into 4 8 bit unsigned integer chunks. We are
         # converting the passed in value to a little endian, unsigned long

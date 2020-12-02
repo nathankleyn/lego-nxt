@@ -1,8 +1,12 @@
-require 'coveralls'
-Coveralls.wear!
+# frozen_string_literal: true
+
+if ENV['CI']
+  require 'simplecov'
+  SimpleCov.start
+end
 
 require 'matchers'
-require 'lego-nxt'
+require 'lego_nxt'
 
 # rubocop:disable Style/MixinUsage
 include NXT::Exceptions

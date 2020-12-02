@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Utils
     # Utilities related to asserting values are what is expected.

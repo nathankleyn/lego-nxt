@@ -1,9 +1,69 @@
-LineLength:
+require: rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 2.7
+
+Layout/LineLength:
+  Enabled: true
   Max: 120
 
-MethodLength:
-  Max: 100
-
 Metrics/BlockLength:
-  Exclude:
-    - spec/**/*.rb
+  Enabled: true
+  Max: 300
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 20
+
+RSpec/ExampleLength:
+  Enabled: true
+  Max: 20
+
+Metrics/AbcSize:
+  Enabled: true
+  Max: 20
+
+Lint/DuplicateBranch:
+  Enabled: true
+
+Lint/DuplicateRegexpCharacterClassElement:
+  Enabled: true
+
+Lint/EmptyBlock:
+  Enabled: true
+
+Lint/EmptyClass:
+  Enabled: true
+
+Lint/NoReturnInBeginEndBlocks:
+  Enabled: true
+
+Lint/ToEnumArguments:
+  Enabled: true
+
+Lint/UnexpectedBlockArity:
+  Enabled: true
+
+Lint/UnmodifiedReduceAccumulator:
+  Enabled: true
+
+Style/ArgumentsForwarding:
+  Enabled: true
+
+Style/CollectionCompact:
+  Enabled: true
+
+Style/DocumentDynamicEvalDefinition:
+  Enabled: true
+
+Style/NegatedIfElseCondition:
+  Enabled: true
+
+Style/NilLambda:
+  Enabled: true
+
+Style/RedundantArgument:
+  Enabled: true
+
+Style/SwapValues:
+  Enabled: true

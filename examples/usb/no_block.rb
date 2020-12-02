@@ -1,4 +1,6 @@
-require 'lego-nxt'
+# frozen_string_literal: true
+
+require 'lego_nxt'
 
 nxt = NXTBrick.new(:usb)
 

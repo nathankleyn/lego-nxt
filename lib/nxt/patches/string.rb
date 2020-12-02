@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Some patches that extend the default Ruby String class with some useful
 # methods.
 class String

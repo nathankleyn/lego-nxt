@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Command
     # The base implementation of all commands, providing low-level details that
@@ -51,14 +53,15 @@ module NXT
         PORTS[port]
       end
 
-      def send_and_receive(command_identifier, payload = [], response_required = true)
+      def send_and_receive(command_identifier, payload = [], response_required: true)
         send(command_identifier, payload, response_required)
         # We bail unless we need to wait for response.
         return unless response_required
+
         receive
       end
 
-      def send(command_identifier, payload = [], response_required = true)
+      def send(command_identifier, payload = [], response_required: true)
         command_identifier |= 0x80 unless response_required
 
         @interface.send([
@@ -75,7 +78,7 @@ module NXT
         raise 'Not a valid response to the command that was sent.' unless response[1] == command_identifier
         raise ERRORS[response[2]] unless response[2].zero?
 
-        response[3..-1]
+        response[3..]
       end
     end
   end

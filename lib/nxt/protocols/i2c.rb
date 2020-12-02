@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Protocols
     # Communication to the NXT brick for digital sensors is done using the I2C
@@ -28,14 +30,14 @@ module NXT
       I2C_VARIABLE_OPS = {
         read_continuous_measurements_interval: 0x40,
         read_command_state: 0x41,
-        read_measurement_byte_0: 0x42,
-        read_measurement_byte_1: 0x43,
-        read_measurement_byte_2: 0x44,
-        read_measurement_byte_3: 0x45,
-        read_measurement_byte_4: 0x46,
-        read_measurement_byte_5: 0x47,
-        read_measurement_byte_6: 0x48,
-        read_measurement_byte_7: 0x49,
+        read_measurement_byte_zero: 0x42,
+        read_measurement_byte_one: 0x43,
+        read_measurement_byte_two: 0x44,
+        read_measurement_byte_three: 0x45,
+        read_measurement_byte_four: 0x46,
+        read_measurement_byte_five: 0x47,
+        read_measurement_byte_six: 0x48,
+        read_measurement_byte_seven: 0x49,
         read_actual_zero: 0x50,
         read_actual_scale_factor: 0x51,
         read_actual_scale_divisor: 0x52

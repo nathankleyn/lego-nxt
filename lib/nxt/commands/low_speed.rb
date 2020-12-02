@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Command
     # An implementation of all the low speed I2C related NXT commands:
@@ -29,15 +31,15 @@ module NXT
         nil
       end
 
-      def ls_get_status(response_required = false)
+      def ls_get_status(response_required: false)
         send_and_receive(COMMAND_IDENTIFIER[:ls_get_status], [], response_required)
       end
 
-      def ls_write(response_required = false)
+      def ls_write(response_required: false)
         send_and_receive(COMMAND_IDENTIFIER[:ls_write], [], response_required)
       end
 
-      def ls_read(response_required = false)
+      def ls_read(response_required: false)
         send_and_receive(COMMAND_IDENTIFIER[:ls_read], [], response_required)
       end
     end

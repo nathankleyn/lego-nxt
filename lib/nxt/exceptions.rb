@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Exceptions
     # Raised when a class has not implemented a method from the base class

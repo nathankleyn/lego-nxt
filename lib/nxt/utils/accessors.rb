@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Utils
     # Utilities related to creating accessors that have some conditonal guards

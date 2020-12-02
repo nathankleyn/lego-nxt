@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Connector
     # Holds implementations of connectors that are output based.
@@ -61,9 +63,9 @@ module NXT
 
         # takes block for response, or can return the response instead.
         def move
-          update_output_state(duration > 0 && duration_type != :seconds)
+          update_output_state(duration.positive? && duration_type != :seconds)
 
-          if duration > 0 && duration_type == :seconds
+          if duration.positive? && duration_type == :seconds
             wait_after_move
           else
             reset
@@ -84,24 +86,24 @@ module NXT
       private
 
       def duration_type=(type)
-        if !type.nil?
+        if type.nil?
+          @duration_type = :seconds
+        else
           assert_in(:type, type, DURATION_TYPE)
           @duration_type = type
-        else
-          @duration_type = :seconds
         end
       end
 
       def duration_after=(after)
-        if !after.nil?
+        if after.nil?
+          @duration_after = :stop
+        else
           unless @duration_type == :seconds
             raise(TypeError, 'The after option is only available when the unit duration is in seconds.')
           end
 
           assert_in(:after, after, DURATION_AFTER)
           @duration_after = after
-        else
-          @duration_after = :stop
         end
       end
 

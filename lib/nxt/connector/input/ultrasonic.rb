@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Connector
     module Input
@@ -44,6 +46,7 @@ module NXT
         def distance!
           d = distance
           raise UnmeasurableDistance if d == 255
+
           d
         end
 

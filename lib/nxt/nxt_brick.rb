@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This class is the entry point for end-users creating their own list of
 # commands to execute remotely on a Lego NXT brick.
 #

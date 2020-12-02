@@ -1,4 +1,4 @@
-# Lego NXT [![Gem Version](https://badge.fury.io/rb/lego-nxt.png)](http://badge.fury.io/rb/lego-nxt) [![Build Status](https://travis-ci.org/nathankleyn/lego-nxt.png)](https://travis-ci.org/nathankleyn/lego-nxt) [![Code Climate](https://codeclimate.com/github/nathankleyn/lego-nxt.png)](https://codeclimate.com/github/nathankleyn/lego-nxt) [![Coverage Status](https://coveralls.io/repos/nathankleyn/lego-nxt/badge.png)](https://coveralls.io/r/nathankleyn/lego-nxt) [![Dependency Status](https://gemnasium.com/nathankleyn/lego-nxt.png)](https://gemnasium.com/nathankleyn/lego-nxt)
+# Lego NXT [![Build Status](https://github.com/nathankleyn/lego-nxt/workflows/Tests/badge.svg)](https://github.com/nathankleyn/lego-nxt/actions?query=workflow%3ATests) [![Coverage Status](https://coveralls.io/repos/github/nathankleyn/attr_combined_accessor/badge.svg?branch=master)](https://coveralls.io/github/nathankleyn/lego-nxt?branch=master) [![RubyGems Version](https://img.shields.io/gem/v/lego-nxt.svg)](https://rubygems.org/gems/lego-nxt)
 
 > **This gem is under heavy development!** A lot of the below code may not work, and is certainly not guranteed to be reliable if it does! If you need to base a working project on this, I recommend [going back to the `ruby-nxt` gem this work is inspired by](https://github.com/zuk/ruby-nxt) for the time being.
 
@@ -108,12 +108,4 @@ In addition to this, you might find the tests quite helpful. There are currently
 
 ## License
 
-The MIT License
-
-Copyright (c) 2014 Nathan Kleyn
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+This project is licensed [via MIT license](LICENSE).

@@ -1,4 +1,6 @@
-require 'lego-nxt'
+# frozen_string_literal: true
+
+require 'lego_nxt'
 
 NXTBrick.new(:usb) do |nxt|
   nxt.add_ultrasonic_input(:one, :sonar)

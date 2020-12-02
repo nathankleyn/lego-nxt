@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NXT
   module Interface
     # The base implementation of all communication interfaces. This is

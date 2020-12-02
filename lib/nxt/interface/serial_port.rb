@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'serialport'
 
 module NXT
@@ -15,11 +17,13 @@ module NXT
       READ_TIMEOUT = 5_000
 
       def initialize(dev)
+        super()
         self.dev = dev
       end
 
       def dev=(dev)
         raise InvalidDeviceError unless File.exist?(dev)
+
         @dev = dev
       end
 
@@ -68,7 +72,7 @@ module NXT
         #
         # Reference: Appendix 1, Page 22
         length = @connection.sysread(2)
-        @connection.sysread(length.unpack('v')[0]).from_hex_str
+        @connection.sysread(length.unpack1('v')).from_hex_str
       end
     end
   end

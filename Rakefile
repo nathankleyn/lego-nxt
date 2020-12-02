@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rake'
 require 'rake/clean'
 require 'rdoc/task'
@@ -23,6 +25,7 @@ namespace :nxt do
 
       devices = Dir['/dev/*NXT*']
       raise 'Could not detect any connected NXT bricks.' if devices.empty?
+
       puts "Detected a NXT brick at '#{devices.first}'."
     end
   end
