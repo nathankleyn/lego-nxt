@@ -43,7 +43,7 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.13.0)
     rainbow (3.0.0)
-    redcarpet (3.5.0)
+    redcarpet (3.5.1)
     regexp_parser (2.0.0)
     rexml (3.2.4)
     rspec (3.10.0)
