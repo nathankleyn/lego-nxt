@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = '>= 2.7.2'
 
-  gem.add_dependency 'activesupport', '~> 6.0', '>= 6.0.3.4'
+  gem.add_dependency 'activesupport', '>= 6.0.3.4', '< 8'
   gem.add_dependency 'libusb', '~>0.6.4'
   gem.add_dependency 'serialport', '~>1.3.1'
 
